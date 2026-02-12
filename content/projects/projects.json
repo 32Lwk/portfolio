@@ -1,0 +1,205 @@
+[
+  {
+    "id": "medicine-chat-tool",
+    "name": "チャット型医薬品相談ツール（β版）",
+    "description": "症状・体調・生活状況に基づき、一般用医薬品をチャット形式で提案するWebアプリケーション。登録販売者の相談プロセスを再現した独自スコアリングアルゴリズムとLLMを併用したハイブリッド推奨システムを実装。ドラッグストアでの現場経験（高齢者とのコミュニケーション、言語の壁、人手不足）を踏まえ、2025年4月から開発開始。要件定義から設計・開発・運用まで一貫担当し、継続的に機能拡張と改善を実施。セキュリティ機能、多言語対応、アクセシビリティ対応、クラウドインフラ構築など、包括的なシステム開発を実現。",
+    "category": "Web Application",
+    "technologies": [
+      "Python 3.9+",
+      "Flask 3.0",
+      "OpenAI GPT-4o-mini",
+      "PostgreSQL (Neon)",
+      "DeepL API",
+      "Pandas/NumPy",
+      "Vanilla JS (ES6+)",
+      "Gunicorn",
+      "Docker",
+      "GCP Cloud Run"
+    ],
+    "image": "/images/projects/medicine-chat-tool.png",
+    "githubUrl": "https://github.com/32Lwk/medicine-recommend-system/",
+    "demoUrl": "https://medicine-recommend-340042923793.asia-northeast1.run.app/",
+    "featured": true,
+    "date": {
+      "start": "2025-04"
+    },
+    "highlights": [
+      "独自スコアリングアルゴリズムの実装",
+      "ハイブリッド推奨システム（ルールベース＋LLM）",
+      "危機検出・多言語対応",
+      "アクセシビリティ対応（WCAG AA準拠）",
+      "クラウド移行（Render→GCP Cloud Run）",
+      "マルチインスタンス対応"
+    ],
+    "stats": {
+      "commits": 426,
+      "developmentPeriod": "2025年4月 - 継続中（約10ヶ月）",
+      "technologyCount": 10,
+      "linesOfCode": 185508,
+      "contributors": 1,
+      "languages": [
+        { "name": "Python", "percent": 68.8 },
+        { "name": "JavaScript", "percent": 21.7 },
+        { "name": "CSS", "percent": 5.4 },
+        { "name": "HTML", "percent": 3.9 },
+        { "name": "PowerShell", "percent": 0.2 },
+        { "name": "Makefile", "percent": 0.0 }
+      ]
+    },
+    "technologyDetails": [
+      {
+        "name": "Python 3.9+",
+        "purpose": "バックエンド開発",
+        "role": "Flaskフレームワークを使用したWebアプリケーションのコアロジック実装。医薬品推奨アルゴリズム、セキュリティ検証、データ処理を担当。"
+      },
+      {
+        "name": "Flask 3.0",
+        "purpose": "Webフレームワーク",
+        "role": "軽量で柔軟なWebアプリケーションフレームワーク。Blueprintによるモジュール分割、セッション管理、ルーティングを実装。"
+      },
+      {
+        "name": "OpenAI GPT-4o-mini",
+        "purpose": "AI推奨エンジン",
+        "role": "症状分析、カウンセリング応答、質問生成などに使用。ルールベース推奨と組み合わせたハイブリッドシステムを実現。"
+      },
+      {
+        "name": "PostgreSQL (Neon)",
+        "purpose": "データベース",
+        "role": "サーバーレスPostgreSQL。セッション管理、フィードバック保存、グローバル状態管理に使用。マルチインスタンス対応を実現。"
+      },
+      {
+        "name": "DeepL API",
+        "purpose": "多言語翻訳",
+        "role": "日本語・英語・中国語・韓国語の4言語対応。翻訳速度を10-20倍高速化し、コストを約100倍削減。"
+      },
+      {
+        "name": "Vanilla JS (ES6+)",
+        "purpose": "フロントエンド",
+        "role": "フレームワーク不使用のモダンJavaScript。インタラクティブなUI、アニメーション、アクセシビリティ機能を実装。"
+      },
+      {
+        "name": "Docker",
+        "purpose": "コンテナ化",
+        "role": "アプリケーションのコンテナ化。GCP Cloud Runへのデプロイを容易にし、環境の一貫性を保証。"
+      },
+      {
+        "name": "GCP Cloud Run",
+        "purpose": "クラウドインフラ",
+        "role": "サーバーレスコンテナ実行環境。スケールゼロ対応、自動スケーリング、コスト最適化を実現。"
+      }
+    ],
+    "screenshots": [
+      {
+        "type": "image",
+        "url": "/images/projects/medicine-chat-tool-screenshot-1.png",
+        "thumbnail": "/images/projects/medicine-chat-tool-thumb-1.png",
+        "alt": "チャット型医薬品相談ツールのメイン画面",
+        "caption": "症状入力と推奨結果の表示"
+      },
+      {
+        "type": "image",
+        "url": "/images/projects/medicine-chat-tool-screenshot-2.png",
+        "thumbnail": "/images/projects/medicine-chat-tool-thumb-2.png",
+        "alt": "多言語対応とアクセシビリティ機能",
+        "caption": "4言語対応と音声読み上げ機能"
+      }
+    ],
+    "relatedLinks": [
+      {
+        "label": "GitHubリポジトリ",
+        "url": "https://github.com/32Lwk/medicine-recommend-system/",
+        "type": "documentation"
+      },
+      {
+        "label": "デモサイト",
+        "url": "https://medicine-recommend-340042923793.asia-northeast1.run.app/",
+        "type": "demo"
+      },
+      {
+        "label": "README（技術詳細）",
+        "url": "https://github.com/32Lwk/medicine-recommend-system/blob/main/README.md",
+        "type": "documentation"
+      }
+    ],
+    "subProjects": [
+      {
+        "id": "latent-space-medicine",
+        "name": "医薬品推奨アルゴリズム（潜在空間の実装）",
+        "description": "効能・禁忌・ユーザー属性・症状パターンを統合評価するルールベース＋LLMハイブリッド推奨システム。方言対応・漢方ロジック・成分重複チェック・効能特異性スコアリングを実装。単一症状時の解熱鎮痛薬・総合感冒薬の推奨精度向上を実現。",
+        "technologies": [
+          "Python",
+          "Pandas",
+          "独自スコアリングエンジン",
+          "薬効データベース連携"
+        ],
+        "highlights": [
+          "ルールベース＋LLMハイブリッド設計",
+          "方言対応・漢方ロジック実装",
+          "成分重複チェック機能",
+          "効能特異性スコアリング",
+          "二段階スコアリングによる高速化"
+        ]
+      },
+      {
+        "id": "security-input-validation",
+        "name": "セキュリティ・入力検証システム",
+        "description": "850以上の攻撃パターンを検出する多層防御システム。不適切・危険入力の検出とブロック、危機検出（緊急受診勧奨）、絶対ブロックリスト、セッション永続化によるUX維持を実装。医療相談用途にふさわしい入力フィルタリングと、ブロック時も案内メッセージを表示するユーザー体験の両立を実現。",
+        "technologies": [
+          "Python",
+          "Flask Session",
+          "PostgreSQL",
+          "キーワードベース＋リスク評価",
+          "プロンプトインジェクション対策"
+        ],
+        "highlights": [
+          "850以上の攻撃パターン検出",
+          "危機検出システム（自殺・自傷検出）",
+          "入力フィルタリング",
+          "セッション永続化",
+          "ユーザー体験の最適化",
+          "多層防御システム"
+        ]
+      },
+      {
+        "id": "multimodal-multilang-ux",
+        "name": "マルチモーダル・多言語UX",
+        "description": "日本語・英語・中国語・韓国語対応、方言変換（100件以上の方言表現を標準語に変換）、音声読み上げ、文字サイズ調整、WCAG AA準拠を意識したアクセシビリティ、季節イベントUI（正月・節分・バレンタイン・冬装飾）を実装。高齢者・外国人の利用を想定した多様なユーザーに対応するUI/UXを実現。",
+        "technologies": [
+          "DeepL API",
+          "Vanilla JS",
+          "CSS（レスポンシブ）",
+          "UDフォント",
+          "Web Speech API"
+        ],
+        "highlights": [
+          "4言語対応（日本語・英語・中国語・韓国語）",
+          "方言変換機能（100件以上の方言表現）",
+          "WCAG AA準拠",
+          "音声読み上げ機能",
+          "文字サイズ調整機能",
+          "季節イベントUI"
+        ]
+      },
+      {
+        "id": "cloud-infrastructure",
+        "name": "クラウド基盤・運用",
+        "description": "RenderからGCP Cloud Runへの移行、Cloud SQLからNeon PostgreSQL（サーバーレス）への移行を実施。Docker化、GitHub連携による自動デプロイを実現。約2日での移行、コスト最適化、スケールゼロ対応を達成。",
+        "technologies": [
+          "GCP Cloud Run",
+          "Neon PostgreSQL",
+          "Docker",
+          "GitHub Actions",
+          "Cloud Build"
+        ],
+        "highlights": [
+          "クラウド移行（Render→GCP Cloud Run）",
+          "データベース移行（Cloud SQL→Neon PostgreSQL）",
+          "Docker化",
+          "CI/CD自動化",
+          "約2日での移行完了",
+          "コスト最適化・スケールゼロ対応"
+        ]
+      }
+    ]
+  }
+]
