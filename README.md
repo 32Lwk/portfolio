@@ -2,7 +2,7 @@
 
 名古屋大学 理学部 物理学科に在籍する大学生、川嶋宥翔のポートフォリオ兼ブログサイトです。
 
-**最終更新: 2026年2月13日**
+**最終更新: 2026年2月14日**
 
 ## 技術スタック
 
@@ -17,7 +17,7 @@
 
 - **ポートフォリオ** - プロジェクト一覧・詳細（技術スタック、言語別割合、開発の歴史など）
 - **ブログ** - Markdown / MDX による記事投稿
-- **About** - 自己紹介、経歴、スキル、大会・賞歴
+- **About** - 自己紹介、経歴、スキル、大会・賞歴（学歴セクションでテニスサーブの Canvas アニメーション）
 - **Resume** - PDF ダウンロード対応
 - **SEO** - サイトマップ、robots.txt、OGP
 - **UI/UX** - ダークモード、レスポンシブデザイン
@@ -52,10 +52,10 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 portfolio-site/
 ├── app/                # Next.js App Router（pages, layout, API）
-├── components/         # React コンポーネント（ui, portfolio, blog 等）
-├── lib/                 # ユーティリティ・データ取得（projects, blog, ai）
-├── content/             # コンテンツ（ブログ, プロジェクト JSON）
-└── public/              # 静的ファイル（画像等）
+├── components/         # React コンポーネント（ui, portfolio, blog, animations 等）
+├── lib/                # ユーティリティ・データ取得（projects, blog, ai）
+├── content/            # コンテンツ（ブログ, プロジェクト JSON）
+└── public/             # 静的ファイル（画像等）
 ```
 
 ## ライセンス
