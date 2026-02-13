@@ -9,7 +9,7 @@ export interface BlogPost {
   title: string;
   description: string;
   date: string;
-  category: "技術記事" | "キャリア" | "学習記録" | "医療×IT";
+  category: "技術" | "プロジェクト" | "学習" | "キャリア";
   tags: string[];
   author: string;
   featured?: boolean;
@@ -35,7 +35,7 @@ export function getAllPosts(): BlogPost[] {
         title: data.title || "",
         description: data.description || "",
         date: data.date || "",
-        category: data.category || "技術記事",
+        category: data.category || "技術",
         tags: data.tags || [],
         author: data.author || "川嶋宥翔",
         featured: data.featured || false,
@@ -66,7 +66,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
       title: data.title || "",
       description: data.description || "",
       date: data.date || "",
-      category: data.category || "技術記事",
+        category: data.category || "技術",
       tags: data.tags || [],
       author: data.author || "川嶋宥翔",
       featured: data.featured || false,

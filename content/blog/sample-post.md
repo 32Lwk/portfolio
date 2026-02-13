@@ -2,8 +2,8 @@
 title: "ポートフォリオサイトを構築しました"
 description: "Next.js、TypeScript、Tailwind CSSを使用して、モダンで洗練されたポートフォリオ兼ブログサイトを構築しました。"
 date: "2026-02-12"
-category: "技術記事"
-tags: ["Next.js", "TypeScript", "Tailwind CSS", "ポートフォリオ"]
+category: "技術"
+tags: ["Next.js", "TypeScript"]
 author: "川嶋宥翔"
 slug: "sample-post"
 featured: true

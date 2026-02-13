@@ -68,7 +68,7 @@ export const mdxComponents = {
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!props.src || typeof props.src !== "string") return null;
     return (
-      <div className="my-4">
+      <span className="my-4 block">
         <Image
           src={props.src}
           alt={props.alt || ""}
@@ -76,7 +76,7 @@ export const mdxComponents = {
           height={600}
           className="rounded-lg"
         />
-      </div>
+      </span>
     );
   },
   hr: (props: React.HTMLAttributes<HTMLHRElement>) => (

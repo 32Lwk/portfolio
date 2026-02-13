@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { getAllProjects } from "@/lib/projects";
 import { ProjectGrid } from "@/components/portfolio/ProjectGrid";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { CodeVisualization } from "@/components/animations/CodeVisualization";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -13,10 +14,11 @@ export default function ProjectsPage() {
 
   return (
     <>
+      <CodeVisualization />
       {projects.map((project) => (
         <StructuredData key={project.id} type="Project" data={project} />
       ))}
-      <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-12">
           <h1 className="text-4xl font-bold">Projects</h1>
           <p className="mt-4 text-lg text-muted-foreground">
