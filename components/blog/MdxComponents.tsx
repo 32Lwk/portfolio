@@ -66,7 +66,7 @@ export const mdxComponents = {
     />
   ),
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
-    if (!props.src) return null;
+    if (!props.src || typeof props.src !== "string") return null;
     return (
       <div className="my-4">
         <Image

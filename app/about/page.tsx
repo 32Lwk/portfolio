@@ -7,6 +7,7 @@ import { AwardsSection } from "@/components/about/AwardsSection";
 import { CertificationsSection } from "@/components/about/CertificationsSection";
 import { SkillsSection } from "@/components/about/SkillsSection";
 import { ValuesSection } from "@/components/about/ValuesSection";
+import { HometownSection } from "@/components/about/HometownSection";
 import { ContactSection } from "@/components/about/ContactSection";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function AboutPage() {
       <CertificationsSection />
       <SkillsSection />
       <ValuesSection />
+      <HometownSection />
       <ContactSection />
     </div>
   );

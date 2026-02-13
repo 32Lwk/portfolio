@@ -15,10 +15,18 @@ export function ProjectImage({ src, alt }: ProjectImageProps) {
   useEffect(() => {
     if (src) {
       const img = new window.Image();
-      img.onerror = () => setHasError(true);
-      img.onload = () => setHasError(false);
+      img.onerror = () => {
+        setHasError(true);
+        setImageSrc(undefined);
+      };
+      img.onload = () => {
+        setHasError(false);
+        setImageSrc(src);
+      };
       img.src = src;
-      setImageSrc(src);
+    } else {
+      setHasError(true);
+      setImageSrc(undefined);
     }
   }, [src]);
 
@@ -38,7 +46,11 @@ export function ProjectImage({ src, alt }: ProjectImageProps) {
         fill
         className="object-cover transition-transform duration-300 group-hover:scale-105"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        onError={() => setHasError(true)}
+        onError={() => {
+          setHasError(true);
+          setImageSrc(undefined);
+        }}
+        unoptimized={imageSrc.startsWith("http")}
       />
     </div>
   );
