@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProjectById, getAllProjects } from "@/lib/projects";
 import { getAllPosts } from "@/lib/blog";
@@ -9,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { ScreenshotImage } from "@/components/portfolio/ScreenshotImage";
+import { SafeImage } from "@/components/portfolio/SafeImage";
 import { Github, ExternalLink, ArrowLeft, Calendar, GitCommit, Code, Users, FileText, Video, Image as ImageIcon, Link as LinkIcon, Shield, Globe, TrendingUp } from "lucide-react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { ProjectHistorySection } from "@/components/portfolio/ProjectHistorySection";
@@ -105,22 +105,17 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         <ScrollReveal>
           <div className="mb-12">
             <div className="mb-6 overflow-hidden rounded-lg shadow-md">
-              {project.image ? (
-                <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                    priority
-                  />
-                </div>
-              ) : (
-                <div className="aspect-video w-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                  <span className="text-muted-foreground">画像準備中</span>
-                </div>
-              )}
+              <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                <SafeImage
+                  src={project.image}
+                  alt={project.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                  priority
+                  aspectRatio="aspect-video"
+                />
+              </div>
             </div>
             <div>
               <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
