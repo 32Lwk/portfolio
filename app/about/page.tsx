@@ -9,6 +9,7 @@ import { SkillsSection } from "@/components/about/SkillsSection";
 import { ValuesSection } from "@/components/about/ValuesSection";
 import { HometownSection } from "@/components/about/HometownSection";
 import { ContactSection } from "@/components/about/ContactSection";
+import { TennisServeAnimation } from "@/components/animations/TennisServeAnimation";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,17 +18,24 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col">
-      <HeroSection />
-      <BioSection />
-      <EducationTimeline />
-      <CareerTimeline />
-      <AwardsSection />
-      <CertificationsSection />
-      <SkillsSection />
-      <ValuesSection />
-      <HometownSection />
-      <ContactSection />
-    </div>
+    <>
+      <TennisServeAnimation />
+      <div className="flex flex-col">
+        <HeroSection />
+        <BioSection />
+        <div data-section="education">
+          <EducationTimeline />
+        </div>
+        <div data-section="career">
+          <CareerTimeline />
+        </div>
+        <AwardsSection />
+        <CertificationsSection />
+        <SkillsSection />
+        <ValuesSection />
+        <HometownSection />
+        <ContactSection />
+      </div>
+    </>
   );
 }

@@ -62,6 +62,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <StructuredData type="Article" data={post} />
       <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="flex gap-8">
+          <TableOfContents />
           <article className="flex-1">
           <header className="mb-8">
             <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -101,7 +102,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
           <BlogNavigation prevPost={prevPost} nextPost={nextPost} />
           </article>
-          <TableOfContents />
         </div>
       </div>
     </>

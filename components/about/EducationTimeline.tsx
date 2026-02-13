@@ -94,7 +94,7 @@ function EducationImage({
 
 export function EducationTimeline() {
   return (
-    <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8 relative">
       <ScrollReveal>
         <h2 className="mb-8 text-3xl font-bold">学歴</h2>
         <div className="relative">

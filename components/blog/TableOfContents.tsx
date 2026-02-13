@@ -55,8 +55,8 @@ export function TableOfContents() {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="sticky top-24 hidden lg:block">
-      <div className="rounded-lg border bg-card p-4">
+    <nav className="hidden shrink-0 lg:block lg:min-w-56 lg:w-56">
+      <div className="sticky top-24 rounded-lg border bg-card p-4 min-h-[120px] min-w-56">
         <h3 className="mb-4 text-sm font-semibold">目次</h3>
         <ul className="space-y-2 text-sm">
           {headings.map((heading) => (

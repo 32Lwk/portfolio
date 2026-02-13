@@ -20,9 +20,14 @@ export default function Home() {
       <ParticleSimulation />
       <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8 overflow-hidden">
-        {/* 背景グラデーション */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
+      <section className="relative mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8 overflow-visible">
+        {/* 背景グラデーション - 統一された設定 */}
+        <div className="absolute inset-0 -z-10 overflow-visible">
+          {/* 上部グラデーション */}
+          <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-primary/12 via-primary/6 via-primary/3 to-transparent blur-3xl" />
+          {/* 下部グラデーション - セクション境界を超えて拡張 */}
+          <div className="absolute -bottom-48 left-0 right-0 h-[500px] bg-gradient-to-b from-transparent via-primary/3 via-primary/6 to-primary/12 blur-3xl" />
+          {/* 装飾的なグラデーション円 */}
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse-glow" />
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1.5s' }} />
         </div>
@@ -89,8 +94,19 @@ export default function Home() {
 
       {/* Featured Projects Section */}
       {featuredProjects.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mb-8 flex items-center justify-between">
+        <section className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8 overflow-visible">
+          {/* 背景グラデーション - 統一された設定 */}
+          <div className="absolute inset-0 -z-10 overflow-visible">
+            {/* 上部グラデーション - 前のセクションから拡張 */}
+            <div className="absolute -top-48 left-0 right-0 h-[500px] bg-gradient-to-b from-primary/12 via-primary/6 via-primary/3 to-transparent blur-3xl" />
+            {/* 下部グラデーション - 次のセクションへ拡張 */}
+            <div className="absolute -bottom-48 left-0 right-0 h-[500px] bg-gradient-to-b from-transparent via-primary/3 via-primary/6 to-primary/12 blur-3xl" />
+            {/* 装飾的なグラデーション円 */}
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          </div>
+          
+          <div className="mb-8 flex items-center justify-between relative z-10">
             <h2 className="text-3xl font-bold">Featured Projects</h2>
             <Button variant="ghost" asChild>
               <Link href="/projects">
@@ -99,7 +115,7 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 relative z-10">
             {featuredProjects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -109,8 +125,19 @@ export default function Home() {
 
       {/* Latest Blog Posts Section */}
       {latestPosts.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mb-8 flex items-center justify-between">
+        <section className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8 overflow-visible">
+          {/* 背景グラデーション - 統一された設定 */}
+          <div className="absolute inset-0 -z-10 overflow-visible">
+            {/* 上部グラデーション - 前のセクションから拡張 */}
+            <div className="absolute -top-48 left-0 right-0 h-[500px] bg-gradient-to-b from-primary/12 via-primary/6 via-primary/3 to-transparent blur-3xl" />
+            {/* 下部グラデーション */}
+            <div className="absolute bottom-0 left-0 right-0 h-[500px] bg-gradient-to-b from-transparent via-primary/3 via-primary/6 to-primary/12 blur-3xl" />
+            {/* 装飾的なグラデーション円 */}
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          </div>
+          
+          <div className="mb-8 flex items-center justify-between relative z-10">
             <h2 className="text-3xl font-bold">Latest Blog Posts</h2>
             <Button variant="ghost" asChild>
               <Link href="/blog">
@@ -119,7 +146,7 @@ export default function Home() {
               </Link>
             </Button>
           </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 relative z-10">
             {latestPosts.map((post) => (
               <BlogCard key={post.slug} post={post} />
             ))}
