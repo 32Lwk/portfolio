@@ -38,8 +38,24 @@ export function ParticleSimulation() {
     if (!ctx) return;
 
     const resizeCanvas = () => {
+      const prevWidth = canvas.width;
+      const prevHeight = canvas.height;
+
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
+      // リサイズ時にパーティクル位置をスケールして偏りを防止
+      if (prevWidth > 0 && prevHeight > 0 && particlesRef.current.length > 0) {
+        const scaleX = canvas.width / prevWidth;
+        const scaleY = canvas.height / prevHeight;
+
+        particlesRef.current.forEach((particle) => {
+          particle.x *= scaleX;
+          particle.y *= scaleY;
+          particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+          particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+        });
+      }
     };
 
     resizeCanvas();

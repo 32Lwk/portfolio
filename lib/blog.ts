@@ -204,3 +204,28 @@ export function getPostsByTag(tag: string): BlogPost[] {
 export function getFeaturedPosts(): BlogPost[] {
   return getAllPosts().filter((post) => post.featured);
 }
+
+/** 公開記事のみからユニークなタグ一覧を取得 */
+export function getAllTags(): string[] {
+  const posts = getAllPosts();
+  const set = new Set<string>();
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      if (tag.trim()) set.add(tag.trim());
+    }
+  }
+  return Array.from(set).sort();
+}
+
+/** 本文から最初の画像URLを取得（Markdown・HTML対応） */
+export function getFirstImageFromContent(content: string): string | null {
+  // Markdown形式: ![alt](url)
+  const markdownMatch = content.match(/!\[[^\]]*\]\(([^)]+)\)/);
+  if (markdownMatch?.[1]) return markdownMatch[1].trim();
+
+  // HTML形式: <img src="...">
+  const htmlMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (htmlMatch?.[1]) return htmlMatch[1].trim();
+
+  return null;
+}

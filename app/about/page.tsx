@@ -10,6 +10,7 @@ import { ValuesSection } from "@/components/about/ValuesSection";
 import { HometownSection } from "@/components/about/HometownSection";
 import { ContactSection } from "@/components/about/ContactSection";
 import { TennisServeAnimation } from "@/components/animations/TennisServeAnimation";
+import { AboutBackground } from "@/components/about/AboutBackground";
 
 export const metadata: Metadata = {
   title: "About",
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
+      <AboutBackground />
       <TennisServeAnimation />
       <div className="flex flex-col">
         <HeroSection />
@@ -26,6 +28,7 @@ export default function AboutPage() {
         <div data-section="education">
           <EducationTimeline />
         </div>
+        <HometownSection />
         <div data-section="career">
           <CareerTimeline />
         </div>
@@ -33,7 +36,6 @@ export default function AboutPage() {
         <CertificationsSection />
         <SkillsSection />
         <ValuesSection />
-        <HometownSection />
         <ContactSection />
       </div>
     </>

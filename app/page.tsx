@@ -46,7 +46,7 @@ export default function Home() {
             </div>
             
             <h1 className="text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl mb-6">
-              <span className="gradient-text animate-gradient">川嶋宥翔</span>
+              <span className="gradient-text animate-gradient">Yuto K.</span>
             </h1>
             
             <div className="mb-8">

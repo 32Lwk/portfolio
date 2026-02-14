@@ -8,7 +8,7 @@ export function HeroSection() {
       <div className="mx-auto max-w-3xl text-center">
         <ScrollReveal>
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-            川嶋宥翔
+            Yuto K.
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
             名古屋大学 理学部物理学科 2年生 / フルスタックエンジニア
