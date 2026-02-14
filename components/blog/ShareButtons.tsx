@@ -1,6 +1,7 @@
 "use client";
 
 import { Twitter, Facebook, Linkedin, Link2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
 interface ShareButtonsProps {
@@ -21,14 +22,14 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      alert("リンクをクリップボードにコピーしました");
+      toast.success("リンクをクリップボードにコピーしました");
     } catch (err) {
       console.error("Failed to copy:", err);
     }
   };
 
   return (
-    <div className="mt-8 flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2">
       <Button variant="outline" size="sm" asChild>
         <a
           href={shareLinks.twitter}

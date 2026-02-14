@@ -12,9 +12,9 @@ export default function BlogPage() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mb-12">
+      <div className="mb-6">
         <h1 className="text-4xl font-bold">Blog</h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <p className="mt-2 text-lg text-muted-foreground">
           技術記事、キャリア、学習記録、医療×ITに関する記事
         </p>
       </div>

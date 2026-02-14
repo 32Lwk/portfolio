@@ -1,56 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useToc } from "./TocContext";
 import { cn } from "@/lib/utils";
 
-interface Heading {
-  id: string;
-  text: string;
-  level: number;
-}
-
 export function TableOfContents() {
-  const [headings, setHeadings] = useState<Heading[]>([]);
-  const [activeId, setActiveId] = useState<string>("");
-
-  useEffect(() => {
-    const article = document.querySelector("article");
-    if (!article) return;
-
-    const headingElements = article.querySelectorAll("h2, h3, h4");
-    const headingList: Heading[] = [];
-
-    headingElements.forEach((heading) => {
-      const id = heading.id || heading.textContent?.toLowerCase().replace(/\s+/g, "-") || "";
-      if (!heading.id) {
-        heading.id = id;
-      }
-      headingList.push({
-        id,
-        text: heading.textContent || "",
-        level: parseInt(heading.tagName.charAt(1)),
-      });
-    });
-
-    setHeadings(headingList);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-100px 0px -66% 0px" }
-    );
-
-    headingElements.forEach((heading) => observer.observe(heading));
-
-    return () => {
-      headingElements.forEach((heading) => observer.unobserve(heading));
-    };
-  }, []);
+  const toc = useToc();
+  const headings = toc?.headings ?? [];
+  const activeId = toc?.activeId ?? "";
 
   if (headings.length === 0) return null;
 

@@ -9,7 +9,8 @@ import { BlogCard } from "@/components/blog/BlogCard";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { ScreenshotImage } from "@/components/portfolio/ScreenshotImage";
 import { SafeImage } from "@/components/portfolio/SafeImage";
-import { Github, ExternalLink, ArrowLeft, Calendar, GitCommit, Code, Users, FileText, Video, Image as ImageIcon, Link as LinkIcon, Shield, Globe, TrendingUp } from "lucide-react";
+import { Github, ExternalLink, ArrowLeft, Calendar, GitCommit, Code, Users, FileText, Video, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
+import { ProjectShareButton } from "@/components/portfolio/ProjectShareButton";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { ProjectHistorySection } from "@/components/portfolio/ProjectHistorySection";
 
@@ -88,6 +89,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   // プロジェクトの歴史（GitHubのREADMEから取得した情報を基に）
   const projectHistory = getProjectHistory(project.id);
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const projectUrl = `${baseUrl}/projects/${id}`;
 
   return (
     <>
@@ -142,7 +146,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {project.githubUrl && (
                     <Button variant="outline" size="sm" className="h-9 whitespace-nowrap min-w-[100px]" asChild>
                       <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
@@ -159,6 +163,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                       </Link>
                     </Button>
                   )}
+                  <ProjectShareButton url={projectUrl} />
                 </div>
               </div>
             </div>

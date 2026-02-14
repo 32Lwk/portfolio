@@ -207,7 +207,7 @@ export async function POST(request: NextRequest) {
   }
 
   const isArray = Array.isArray(body);
-  const rawList = isArray ? body : [body];
+  const rawList: unknown[] = isArray ? (body as unknown[]) : [body];
   const projects: Project[] = [];
 
   for (const raw of rawList) {
