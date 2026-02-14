@@ -47,6 +47,14 @@ OPENAI_API_KEY=your_openai_api_key
 NEXT_PUBLIC_SITE_URL=https://your-domain.com
 ```
 
+### 管理画面（Admin UI）
+
+ブログの追加・編集や画像アップロードを行う管理画面は、**ローカル開発時のみ**利用できます。
+
+- **有効化**: `.env.local` に `ENABLE_ADMIN=true` を設定し、`npm run dev` で起動する。
+- **アクセス**: ブラウザで `http://localhost:3000/admin` を開く（ヘッダー・フッターにリンクは出しません）。
+- **本番**: `ENABLE_ADMIN` を設定しないこと。本番ビルド・本番環境では `/admin` にアクセスすると 404 になり、一般公開されません。
+
 ## ディレクトリ構造
 
 ```

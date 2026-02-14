@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import { BlogPost } from "@/lib/blog";
+import type { BlogPost } from "@/lib/blog";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 

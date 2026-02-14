@@ -82,40 +82,6 @@ const updateScrollProgress = () => {
 
 **工夫点**: ビューポートの中心位置（`viewportCenter`）を使うことで、スクロールの途中でセクションに入った場合でも自然にアニメーションが開始されます。
 
-### コートの座標変換と実寸比
-
-テニスコートは **実寸比**（長さ 23.77m、シングルス幅 8.23m など）を維持しつつ、ボールの軌道に合わせて回転・スケールします。
-
-```typescript
-// 実際のテニスコート寸法（m）
-const COURT_LENGTH_M = 23.77;
-const SINGLES_WIDTH_M = 8.23;
-const SERVICE_LINE_FROM_NET_M = 6.4;
-
-// ボール軌道方向をコートの長手方向（+Y）に合わせる
-const dx = targetX - ballStartX;
-const dy = targetY - ballStartY;
-const trajectoryAngle = Math.atan2(dy, dx);
-const angle = trajectoryAngle - Math.PI / 2; // コートを軌道に垂直に配置
-
-// コートサイズを1.25倍に拡大（視認性向上）
-const desiredCourtLengthPx = Math.min(
-  Math.max(travelDistance * 0.82, window.innerHeight * 0.55),
-  window.innerWidth * 0.9
-) * 1.25;
-const meterToPx = desiredCourtLengthPx / COURT_LENGTH_M;
-```
-
-**座標変換**: コートをローカル座標系（コート中心が原点、長手方向が Y 軸）で描画し、キャンバス座標に変換します。
-
-```typescript
-// ローカル座標をキャンバス座標に変換
-const localToWorld = (localX: number, localY: number) => ({
-  x: courtCenterX + localX * cos - localY * sin,
-  y: courtCenterY + localX * sin + localY * cos,
-});
-```
-
 ### サービスボックス内への制限アルゴリズム
 
 ボールのターゲット位置を、**上のサービスボックス内**に制限する処理を実装しています。

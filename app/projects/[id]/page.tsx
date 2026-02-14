@@ -414,7 +414,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                         // 通常の動画リンクまたはサムネイル
                         <div className="relative aspect-video w-full overflow-hidden bg-muted">
                           {video.thumbnail ? (
-                            <Image
+                            <SafeImage
                               src={video.thumbnail}
                               alt={video.alt}
                               fill
