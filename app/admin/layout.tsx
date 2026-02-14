@@ -29,6 +29,9 @@ export default function AdminLayout({
           <Button variant="outline" size="sm" asChild>
             <Link href="/admin/tags">タグ管理</Link>
           </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin/about">About編集</Link>
+          </Button>
         </nav>
       </header>
       <main>{children}</main>
