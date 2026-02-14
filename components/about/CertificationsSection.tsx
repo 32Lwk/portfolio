@@ -2,10 +2,12 @@
 
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { getCertifications } from "@/lib/certifications";
+import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 import { Badge } from "@/components/ui/badge";
 
 export function CertificationsSection() {
-  const certifications = getCertifications();
+  const preview = useAboutPreview();
+  const certifications = preview?.certifications ?? getCertifications();
   if (certifications.length === 0) return null;
 
   return (

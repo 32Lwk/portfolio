@@ -15,24 +15,24 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Yuto K. | Portfolio & Blog",
-    template: "%s | Yuto K.",
+    default: "川嶋 宥翔 | Portfolio & Blog",
+    template: "%s | 川嶋 宥翔",
   },
   description: "名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。",
   keywords: ["ポートフォリオ", "ブログ", "フルスタックエンジニア", "医療AI", "Next.js", "TypeScript"],
-  authors: [{ name: "Yuto K.", url: "https://github.com/32Lwk" }],
-  creator: "Yuto K.",
+  authors: [{ name: "川嶋 宥翔", url: "https://github.com/32Lwk" }],
+  creator: "川嶋 宥翔",
   openGraph: {
     type: "website",
     locale: "ja_JP",
     url: "https://kawashimayuto.dev",
-    title: "Yuto K. | Portfolio & Blog",
+    title: "川嶋 宥翔 | Portfolio & Blog",
     description: "名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。",
-    siteName: "Yuto K. | Portfolio & Blog",
+    siteName: "川嶋 宥翔 | Portfolio & Blog",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Yuto K. | Portfolio & Blog",
+    title: "川嶋 宥翔 | Portfolio & Blog",
     description: "名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。",
   },
   robots: {

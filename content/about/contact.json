@@ -1,0 +1,9 @@
+{
+  "socialLinks": [
+    { "name": "GitHub", "href": "https://github.com/32Lwk", "icon": "Github" },
+    { "name": "LinkedIn", "href": "https://www.linkedin.com/in/kawashimayuto/", "icon": "Linkedin" },
+    { "name": "Instagram", "href": "https://www.instagram.com/32_lwk", "icon": "Instagram" },
+    { "name": "Email", "href": "mailto:kawashima.yuto.c2@s.mail.nagoya-u.ac.jp", "icon": "Mail" }
+  ],
+  "formUrl": "https://forms.gle/9CjKdDGoegjy1isPA"
+}

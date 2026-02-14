@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 const siteConfig = {
-  name: "川嶋宥翔 | Portfolio & Blog",
+  name: "川嶋 宥翔 | Portfolio & Blog",
   description:
     "名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev",
@@ -72,7 +72,7 @@ export function generateStructuredData({
   if (type === "Person") {
     return {
       ...baseStructuredData,
-      name: "川嶋宥翔",
+      name: "川嶋 宥翔",
       jobTitle: "フルスタックエンジニア",
       url: siteConfig.url,
       sameAs: [
@@ -89,7 +89,7 @@ export function generateStructuredData({
       description: data.description,
       author: {
         "@type": "Person",
-        name: "川嶋宥翔",
+        name: "川嶋 宥翔",
       },
       datePublished: data.datePublished,
       dateModified: data.dateModified || data.datePublished,

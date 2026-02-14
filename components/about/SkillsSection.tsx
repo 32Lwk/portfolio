@@ -2,6 +2,7 @@
 
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { getAllSkills, getSkillsByCategory } from "@/lib/skills";
+import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 import { Badge } from "@/components/ui/badge";
 
 const categoryLabels: Record<string, string> = {
@@ -14,22 +15,37 @@ const categoryLabels: Record<string, string> = {
 };
 
 export function SkillsSection() {
-  const skills = getAllSkills();
+  const preview = useAboutPreview();
+  const skills = preview?.skills ?? getAllSkills();
   const categories = Array.from(new Set(skills.map((s) => s.category)));
 
   return (
-    <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+    <section
+      className={
+        preview
+          ? "w-full min-w-0 max-w-full px-4 py-16 sm:px-6 lg:px-8"
+          : "mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8"
+      }
+    >
       <ScrollReveal>
         <h2 className="mb-8 text-3xl font-bold">スキル</h2>
         <div className="space-y-8">
           {categories.map((category) => {
-            const categorySkills = getSkillsByCategory(category);
+            const categorySkills = preview
+              ? skills.filter((s) => s.category === category)
+              : getSkillsByCategory(category);
             return (
               <div key={category}>
                 <h3 className="mb-4 text-xl font-semibold">
                   {category} ({categoryLabels[category] || category})
                 </h3>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div
+                  className={
+                    preview
+                      ? "grid grid-cols-1 gap-4 @sm:grid-cols-2 @lg:grid-cols-3"
+                      : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                  }
+                >
                   {categorySkills.map((skill) => (
                     <ScrollReveal
                       key={skill.name}
