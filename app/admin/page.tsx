@@ -38,6 +38,17 @@ export default function AdminPage() {
             </Button>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <h3 className="text-lg font-medium">About</h3>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            <Button asChild>
+              <Link href="/admin/about">About 編集</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

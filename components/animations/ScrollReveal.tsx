@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { usePreviewMode } from "@/lib/preview-mode-context";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -17,7 +18,12 @@ export function ScrollReveal({
   className,
 }: ScrollRevealProps) {
   const ref = useRef(null);
+  const skipAnimation = usePreviewMode();
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  if (skipAnimation) {
+    return <div className={className}>{children}</div>;
+  }
 
   const variants = {
     hidden: {

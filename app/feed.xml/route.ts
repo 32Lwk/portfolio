@@ -21,7 +21,7 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Yuto K. | Portfolio &amp; Blog</title>
+    <title>川嶋 宥翔 | Portfolio &amp; Blog</title>
     <link>${baseUrl}</link>
     <description>名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。</description>
     <language>ja</language>

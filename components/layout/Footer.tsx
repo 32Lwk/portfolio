@@ -30,7 +30,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
-            <h3 className="text-lg font-semibold">Yuto K.</h3>
+            <h3 className="text-lg font-semibold">川嶋 宥翔</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               名古屋大学 理学部物理学科 2年生
               <br />
@@ -84,7 +84,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Yuto K.. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} 川嶋 宥翔. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -11,111 +11,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-/** 思い出1件 */
-type Memory = {
-  image?: string;
-  imageAlt?: string;
-  text: string;
-};
-
-/** 学歴1件 */
-type EducationItem = {
-  period: string;
-  institution: string;
-  description: string;
-  type: string;
-  /** 学校の写真（ホバー・モーダルで表示） */
-  image?: string;
-  imageAlt?: string;
-  /** 思い出（モーダルで表示） */
-  memories?: Memory[];
-};
-
-const education: EducationItem[] = [
-  {
-    period: "2024年 - 現在",
-    institution: "名古屋大学 理学部物理学科",
-    description: "2028年3月卒業予定",
-    type: "大学",
-    image: "/images/about/education/nagoya-univ.jpg",
-    imageAlt: "名古屋大学",
-    memories: [
-      {
-        text: "宇宙物理の研究を志して入学。C研（理論宇宙物理学）を目指して日々勉学に励んでいます。",
-      },
-      {
-        text: "キャンパスの四季の移ろいが美しく、特に東山キャンパスの桜と紅葉がお気に入りです。",
-      },
-    ],
-  },
-  {
-    period: "2021年 - 2024年",
-    institution: "和歌山県立向陽高等学校",
-    description: "",
-    type: "高校",
-    image: "/images/about/education/koyo-high.jpg",
-    imageAlt: "和歌山県立向陽高等学校",
-    memories: [
-      {
-        text: "硬式テニス部に所属。部活動を通じて仲間と切磋琢磨した3年間でした。",
-      },
-      {
-        text: "進路選択で理学の道を選び、物理への興味が深まった時期です。",
-      },
-    ],
-  },
-  {
-    period: "2018年 - 2021年",
-    institution: "和歌山県立向陽中学校",
-    description: "中学受験",
-    type: "中学校",
-    image: "/images/about/education/koyo-junior.jpg",
-    imageAlt: "和歌山県立向陽中学校",
-    memories: [
-      {
-        text: "中学受験を経て入学。軟式テニス部でスポーツに打ち込みました。",
-      },
-    ],
-  },
-  {
-    period: "2012年 - 2018年",
-    institution: "鳥屋城小学校",
-    description: "",
-    type: "小学校",
-    image: "/images/about/education/toriyakijo-elementary.jpg",
-    imageAlt: "鳥屋城小学校",
-    memories: [
-      {
-        text: "地元の小学校で6年間。友達と走り回ったグラウンドや、図書館で過ごした時間が懐かしいです。",
-      },
-    ],
-  },
-  {
-    period: "調査中 - 2012年3月",
-    institution: "金屋第一保育所（現在：金屋第一こども園）",
-    description: "",
-    type: "保育所",
-    image: "/images/about/education/kanaya-hoikuen.jpg",
-    imageAlt: "金屋第一こども園",
-    memories: [
-      {
-        text: "幼少期を過ごした保育所。現在は金屋第一こども園として施設が続いています。",
-      },
-    ],
-  },
-  {
-    period: "2005年10月28日",
-    institution: "生誕",
-    description: "和歌山市",
-    type: "誕生",
-    memories: [
-      {
-        text: "和歌山市で生まれました。",
-      },
-    ],
-  },
-];
+import {
+  getEducation,
+  type EducationItem,
+} from "@/lib/education";
+import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 
 function EducationImage({
   src,
@@ -154,6 +54,9 @@ function EducationImage({
 
 export function EducationTimeline() {
   const [openItem, setOpenItem] = useState<EducationItem | null>(null);
+  const preview = useAboutPreview();
+  const education = preview?.education ?? getEducation();
+  if (education.length === 0) return null;
 
   return (
     <section className="relative mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">

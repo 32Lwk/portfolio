@@ -4,16 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { MapPin, ImageIcon } from "lucide-react";
-
-/** 和歌山の画像。public/images/about/hometown/ に画像を置き、ここにパスを追加 */
-const hometownImages: Array<{ src: string; alt: string }> = [
-  { src: "/images/about/hometown/wakayama-1.jpg", alt: "和歌山の風景1" },
-  { src: "/images/about/hometown/wakayama-2.jpg", alt: "和歌山の風景2" },
-  { src: "/images/about/hometown/wakayama-3.jpg", alt: "和歌山の風景3" },
-  { src: "/images/about/hometown/wakayama-4.jpg", alt: "和歌山の風景4" },
-  { src: "/images/about/hometown/wakayama-5.jpg", alt: "和歌山の風景5" },
-  { src: "/images/about/hometown/wakayama-6.jpg", alt: "和歌山の風景6" },
-];
+import { getHometown } from "@/lib/hometown";
+import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 
 function HometownImage({
   src,
@@ -44,6 +36,8 @@ function HometownImage({
 }
 
 export function HometownSection() {
+  const preview = useAboutPreview();
+  const hometown = preview?.hometown ?? getHometown();
   return (
     <section className="relative mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <ScrollReveal>
@@ -62,29 +56,30 @@ export function HometownSection() {
               <div className="flex-1 pb-8">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-muted-foreground">
-                    生まれ育った町
+                    {hometown.badgeLabel ?? "生まれ育った町"}
                   </span>
                   <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">
-                    出身地
+                    {hometown.badge ?? "出身地"}
                   </span>
                 </div>
                 <h3 className="mt-1 text-lg font-semibold">
-                  和歌山県有田郡有田川町
+                  {hometown.title}
                 </h3>
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  山椒が有名で美しい町です。実家の近くにドラッグストアがなく、最寄りまで5km。車がなければ薬一つ買いに行けない地域で育った経験が、誰もがどこでも安心して必要な情報やサービスにアクセスできる社会を作りたいという想いの原点になっています。
+                  {hometown.description}
                 </p>
 
-                {/* 和歌山の画像グリッド */}
-                <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-                  {hometownImages.map((img, index) => (
-                    <HometownImage
-                      key={index}
-                      src={img.src}
-                      alt={img.alt}
-                    />
-                  ))}
-                </div>
+                {hometown.images && hometown.images.length > 0 && (
+                  <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+                    {hometown.images.map((img, index) => (
+                      <HometownImage
+                        key={index}
+                        src={img.src}
+                        alt={img.alt}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </ScrollReveal>
           </div>

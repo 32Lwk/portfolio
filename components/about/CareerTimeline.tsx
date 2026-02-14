@@ -1,32 +1,62 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { Briefcase } from "lucide-react";
+import { getCareer, type CareerItem } from "@/lib/career";
+import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
-const career = [
-  {
-    period: "2024年4月 - 継続中",
-    title: "マツモトキヨシ（登録販売者）",
-    description: "登録販売者として勤務。高齢者とのコミュニケーション、言語の壁、人手不足などの課題を現場で経験し、これが後の医薬品相談ツール開発の動機となった。",
-    type: "職歴",
-  },
-  {
-    period: "2024年4月",
-    title: "プログラミング学習開始",
-    description: "Python、JavaScript、HTML/CSSの学習を開始。独学でWebアプリケーション開発の基礎を習得。",
-    type: "学習",
-  },
-  {
-    period: "2025年4月 - 継続中",
-    title: "チャット型医薬品相談ツール（β版）開発",
-    description: "ドラッグストアでの現場経験を踏まえ、医療×AI分野での個人開発プロジェクトを開始。要件定義から設計・開発・運用まで一貫して担当。独自スコアリングアルゴリズム、セキュリティ機能、多言語対応、アクセシビリティ対応など、継続的な機能拡張と改善を実施。",
-    type: "開発",
-  },
-];
+function CareerImage({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+  return (
+    <div
+      className={cn(
+        "relative shrink-0 overflow-hidden rounded-lg border bg-muted",
+        className
+      )}
+    >
+      {!hasError ? (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 96px, 112px"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <Briefcase className="text-muted-foreground h-8 w-8" />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function CareerTimeline() {
+  const preview = useAboutPreview();
+  const career = preview?.career ?? getCareer();
+  const [openItem, setOpenItem] = useState<CareerItem | null>(null);
+  if (career.length === 0) return null;
+
   return (
-    <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8 relative">
+    <section className="relative mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <ScrollReveal>
         <h2 className="mb-8 text-3xl font-bold">経歴</h2>
         <div className="relative">
@@ -37,32 +67,129 @@ export function CareerTimeline() {
                 key={index}
                 delay={index * 0.1}
                 direction="left"
-                className="relative flex items-start gap-6"
+                className="relative"
               >
-                <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 bg-background">
-                  <Briefcase className="h-6 w-6 text-primary" />
-                </div>
-                <div className="flex-1 pb-8">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      {item.period}
-                    </span>
-                    <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">
-                      {item.type}
-                    </span>
+                <div className="group relative flex items-start gap-6">
+                  <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 bg-background">
+                    <Briefcase className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="mt-1 text-lg font-semibold">{item.title}</h3>
-                  {item.description && (
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {item.description}
-                    </p>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setOpenItem(item)}
+                    className="flex flex-1 flex-col gap-4 pb-8 text-left transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:flex-row sm:items-start sm:justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {item.period}
+                        </span>
+                        <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">
+                          {item.type}
+                        </span>
+                      </div>
+                      <h3 className="mt-1 text-lg font-semibold">
+                        {item.title}
+                      </h3>
+                      {item.description && (
+                        <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                      <p className="mt-2 text-xs text-muted-foreground/80">
+                        クリックで詳細を見る
+                      </p>
+                    </div>
+                    {item.image && (
+                      <div
+                        className={cn(
+                          "shrink-0 opacity-0 transition-opacity duration-200",
+                          "group-hover:opacity-100 group-focus-within:opacity-100"
+                        )}
+                      >
+                        <CareerImage
+                          src={item.image}
+                          alt={item.imageAlt ?? `${item.title}の写真`}
+                          className="h-24 w-24 sm:h-28 sm:w-28"
+                        />
+                      </div>
+                    )}
+                  </button>
                 </div>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </ScrollReveal>
+
+      <Dialog
+        open={!!openItem}
+        onOpenChange={(open) => !open && setOpenItem(null)}
+      >
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+          {openItem && (
+            <>
+              <DialogHeader>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">
+                    {openItem.type}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {openItem.period}
+                  </span>
+                </div>
+                <DialogTitle className="text-xl">
+                  {openItem.title}
+                </DialogTitle>
+                {openItem.description && (
+                  <p className="text-sm text-muted-foreground">
+                    {openItem.description}
+                  </p>
+                )}
+              </DialogHeader>
+
+              {openItem.image && (
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
+                  <CareerImage
+                    src={openItem.image}
+                    alt={openItem.imageAlt ?? `${openItem.title}の写真`}
+                    className="h-full w-full"
+                  />
+                </div>
+              )}
+
+              {openItem.memories && openItem.memories.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold">エピソード・感想</h4>
+                  <div className="space-y-4">
+                    {openItem.memories.map((memory, i) => (
+                      <div
+                        key={i}
+                        className="flex flex-col gap-2 sm:flex-row sm:gap-4"
+                      >
+                        {memory.image && (
+                          <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32">
+                            <CareerImage
+                              src={memory.image}
+                              alt={
+                                memory.imageAlt ??
+                                `${openItem.title}の写真`
+                              }
+                              className="h-full w-full"
+                            />
+                          </div>
+                        )}
+                        <p className="text-sm leading-relaxed text-muted-foreground">
+                          {memory.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

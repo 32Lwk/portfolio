@@ -1,0 +1,14 @@
+{
+  "title": "和歌山県有田郡有田川町",
+  "badge": "出身地",
+  "badgeLabel": "生まれ育った町",
+  "description": "山椒が有名で美しい町です。実家の近くにドラッグストアがなく、最寄りまで5km。車がなければ薬一つ買いに行けない地域で育った経験が、誰もがどこでも安心して必要な情報やサービスにアクセスできる社会を作りたいという想いの原点になっています。",
+  "images": [
+    { "src": "/images/about/hometown/wakayama-1.jpg", "alt": "和歌山の風景1" },
+    { "src": "/images/about/hometown/wakayama-2.jpg", "alt": "和歌山の風景2" },
+    { "src": "/images/about/hometown/wakayama-3.jpg", "alt": "和歌山の風景3" },
+    { "src": "/images/about/hometown/wakayama-4.jpg", "alt": "和歌山の風景4" },
+    { "src": "/images/about/hometown/wakayama-5.jpg", "alt": "和歌山の風景5" },
+    { "src": "/images/about/hometown/wakayama-6.jpg", "alt": "和歌山の風景6" }
+  ]
+}
