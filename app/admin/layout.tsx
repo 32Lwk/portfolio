@@ -24,13 +24,10 @@ export default function AdminLayout({
             <Link href="/admin/blog">ブログ一覧</Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <Link href="/admin/blog/new">新規作成</Link>
+            <Link href="/admin/projects">プロジェクト一覧</Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href="/admin/tags">タグ管理</Link>
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/admin/projects">プロジェクト</Link>
           </Button>
         </nav>
       </header>
