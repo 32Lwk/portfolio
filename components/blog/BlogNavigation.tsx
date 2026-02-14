@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BlogPost } from "@/lib/blog";
+import type { BlogPost } from "@/lib/blog";
 
 interface BlogNavigationProps {
   prevPost: BlogPost | null;

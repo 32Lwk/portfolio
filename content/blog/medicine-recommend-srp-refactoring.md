@@ -2,7 +2,7 @@
 title: "SRP改善とコード品質向上 - リファクタリングの経験"
 description: "Single Responsibility Principle (SRP) に基づいた大規模リファクタリング、コードの可読性とメンテナンス性の向上について"
 date: "2026-02-08"
-category: "プロジェクト"
+category: "技術"
 tags: ["医薬品相談ツール", "開発記録"]
 author: "川嶋宥翔"
 featured: false

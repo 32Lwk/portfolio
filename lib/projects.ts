@@ -1,4 +1,16 @@
+import fs from "fs";
+import path from "path";
 import projectsData from "@/content/projects/projects.json";
+
+const PROJECTS_JSON_PATH = path.join(process.cwd(), "content/projects/projects.json");
+
+/** 管理画面用: ファイルから直接読み取り（編集用の最新データ） */
+export function getProjectsFromFile(): Project[] {
+  if (!fs.existsSync(PROJECTS_JSON_PATH)) return [];
+  const raw = fs.readFileSync(PROJECTS_JSON_PATH, "utf8");
+  const data = JSON.parse(raw);
+  return Array.isArray(data) ? data : [];
+}
 
 export interface SubProject {
   id: string;
@@ -6,6 +18,9 @@ export interface SubProject {
   description: string;
   technologies: string[];
   highlights: string[];
+  image?: string;
+  screenshots?: MediaItem[];
+  videos?: MediaItem[];
 }
 
 export interface TechnologyDetail {

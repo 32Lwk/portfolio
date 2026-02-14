@@ -1,6 +1,7 @@
 "use client";
 
-import { BlogPost } from "@/lib/blog";
+import type { BlogPost } from "@/lib/blog";
+import { BLOG_CATEGORIES } from "@/lib/blog-constants";
 import { BlogCard } from "./BlogCard";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,7 @@ export function BlogList({ posts }: BlogListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const categories = Array.from(new Set(posts.map((post) => post.category)));
+  const categories = BLOG_CATEGORIES;
   const tags = Array.from(new Set(posts.flatMap((post) => post.tags)));
 
   const filteredPosts = posts.filter((post) => {

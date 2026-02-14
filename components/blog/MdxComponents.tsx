@@ -67,18 +67,44 @@ export const mdxComponents = {
   ),
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!props.src || typeof props.src !== "string") return null;
+    const width = props.width;
+    const isFullWidth = typeof width === "string" && width.endsWith("%");
+    if (isFullWidth) {
+      return (
+        <span className="my-4 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={props.src}
+            alt={props.alt || ""}
+            className="rounded-lg w-full max-w-full"
+            style={{ width: "100%", height: "auto" }}
+          />
+        </span>
+      );
+    }
+    const numWidth = Number(width) || 800;
+    const numHeight = Number(props.height) || 600;
     return (
-      <span className="my-4 block">
+      <span className="my-4 flex justify-center">
         <Image
           src={props.src}
           alt={props.alt || ""}
-          width={800}
-          height={600}
+          width={numWidth}
+          height={numHeight}
           className="rounded-lg"
         />
       </span>
     );
   },
+  figure: (props: React.HTMLAttributes<HTMLElement>) => (
+    <figure {...props} className="my-4 flex flex-col items-center" />
+  ),
+  figcaption: (props: React.HTMLAttributes<HTMLElement>) => (
+    <figcaption
+      className="mt-2 text-center text-sm text-muted-foreground"
+      {...props}
+    />
+  ),
   hr: (props: React.HTMLAttributes<HTMLHRElement>) => (
     <hr className="my-8 border-border" {...props} />
   ),

@@ -269,7 +269,7 @@ interface Skill {
 title: string
 description: string
 date: string (YYYY-MM-DD)
-category: "技術記事" | "キャリア" | "学習記録" | "医療×IT"
+category: "技術" | "プロジェクト" | "学習" | "キャリア" | "日記"
 tags: string[]
 author: "川嶋宥翔"
 slug: string
