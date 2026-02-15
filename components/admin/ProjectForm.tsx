@@ -15,8 +15,52 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ImageOff } from "lucide-react";
 
 const CATEGORIES = ["Web Application", "Algorithm", "Infrastructure", "Other"] as const;
+
+/** 管理画面用: 画像読み込み失敗時にプレースホルダーとエラー表示を表示 */
+function AdminImagePreview({
+  src,
+  className = "w-24 h-24",
+  errorMessage = "画像が見つかりません。パスを確認するか、画像をアップロードしてください",
+}: {
+  src: string;
+  className?: string;
+  errorMessage?: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
+
+  if (hasError || !src) {
+    return (
+      <div
+        className={`${className} rounded border overflow-hidden bg-muted flex flex-col items-center justify-center gap-1 p-2 border-destructive/50`}
+        title={errorMessage}
+      >
+        <ImageOff className="h-6 w-6 text-destructive shrink-0" />
+        <span className="text-[10px] text-destructive text-center leading-tight line-clamp-2">
+          {errorMessage}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${className} rounded border overflow-hidden bg-muted flex-shrink-0 relative`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        className="w-full h-full object-cover"
+        onError={() => setHasError(true)}
+      />
+    </div>
+  );
+}
 
 function arrayToLines(arr: string[]): string {
   return (arr || []).join("\n");
@@ -453,10 +497,11 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
             />
           </div>
           {image && (
-            <div className="w-24 h-24 rounded border overflow-hidden bg-muted flex-shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image} alt="" className="w-full h-full object-cover" />
-            </div>
+            <AdminImagePreview
+              src={image}
+              className="w-24 h-24 flex-shrink-0"
+              errorMessage="画像が見つかりません。パスを確認するか、画像をアップロードしてください"
+            />
           )}
         </div>
       </div>
@@ -602,10 +647,11 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
                   </div>
                 </div>
                 {ss.url && (
-                  <div className="w-32 h-20 rounded border overflow-hidden bg-muted">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={ss.url} alt="" className="w-full h-full object-cover" />
-                  </div>
+                  <AdminImagePreview
+                    src={ss.url}
+                    className="w-32 h-20"
+                    errorMessage="この画像が見つかりません。URLを確認するか、アップロードしてください"
+                  />
                 )}
               </div>
             ))
