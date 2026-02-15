@@ -46,7 +46,7 @@ export function ParticleSimulation() {
     window.addEventListener("resize", resizeCanvas);
 
     // パーティクルの初期化
-    const particleCount = 300;
+    const particleCount = 500;
     const particles: Particle[] = [];
 
     const colors = [
