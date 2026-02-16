@@ -172,7 +172,7 @@ export function AwardsSection() {
               {(() => {
                 const links: { label?: string; url: string }[] = (
                   (openItem.urls?.length ?? 0) > 0
-                    ? openItem.urls
+                    ? openItem.urls ?? []
                     : openItem.url
                       ? [{ url: openItem.url }]
                       : []
