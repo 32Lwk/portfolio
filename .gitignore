@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files (環境変数・シークレットはGitHubにプッシュしない)
 .env
+.env.example
 .env.local
 .env*.local
 .env.development
