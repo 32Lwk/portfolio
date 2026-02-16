@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import type { BioData, BioBlock } from "@/lib/bio";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 
 interface AboutFormBioProps {
@@ -31,16 +33,22 @@ export function AboutFormBio({ data, onChange }: AboutFormBioProps) {
     if (!file) return;
     e.target.value = "";
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("section", "bio");
       form.append("subId", `block-${afterIndex}`);
       const res = await fetch("/api/admin/upload-about-image", {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("アップロードに失敗しました");
-      const { url } = await res.json();
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const message = (resData as { error?: string }).error ?? "アップロードに失敗しました";
+        toast.error(message);
+        return;
+      }
+      const { url } = resData as { url: string };
       const newBlocks: BioBlock[] = [
         ...blocks.slice(0, afterIndex + 1),
         { type: "image", src: url, alt: "画像" },
@@ -49,6 +57,7 @@ export function AboutFormBio({ data, onChange }: AboutFormBioProps) {
       onChange({ blocks: newBlocks });
     } catch (err) {
       console.error(err);
+      toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
     }
   };
 
@@ -94,16 +103,28 @@ export function AboutFormBio({ data, onChange }: AboutFormBioProps) {
                   )}
                 </span>
                 <Button
-                  type="button"
                   variant="ghost"
                   size="sm"
                   className="h-8 w-8 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeBlock(index);
-                  }}
+                  asChild
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeBlock(index);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        removeBlock(index);
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </span>
                 </Button>
               </div>
             </AccordionTrigger>

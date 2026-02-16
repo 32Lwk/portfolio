@@ -1,5 +1,13 @@
 {
   "name": "川嶋 宥翔",
   "subtitle": "名古屋大学 理学部物理学科 2年生 / フルスタックエンジニア",
-  "description": "「システムを誤らせない設計」を最優先に、医療×AI分野で個人開発に取り組んでいます。"
+  "description": "物理学科に在籍しながら、プログラミングやシステム開発に取り組んでいます。\nPythonを中心に、シミュレーション、Webアプリケーション、業務効率化ツールの開発などを経験してきました。\n「技術で課題を解決すること」を大切にし、学んだ理論を実装につなげることを意識しています。\nこのサイトでは、これまでの制作物や学習の記録をまとめています。",
+  "image": "/images/about/hero/1771178168556-LINE_ALBUM_portfolio_260216_13.jpg",
+  "imageAlt": "川嶋 宥翔",
+  "imageSizePx": 160,
+  "imageBorderPx": 1,
+  "imageShape": "square",
+  "imageBorderRadiusPx": 10,
+  "imagePositionXPercent": 50,
+  "imagePositionYPercent": 33
 }

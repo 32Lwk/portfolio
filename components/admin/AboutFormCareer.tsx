@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import type { CareerItem, CareerMemory } from "@/lib/career";
 import { CAREER_TYPES } from "@/lib/about-constants";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 
 interface AboutFormCareerProps {
@@ -61,19 +63,26 @@ export function AboutFormCareer({ items, onChange }: AboutFormCareerProps) {
     if (!file) return;
     e.target.value = "";
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("section", "career");
       form.append("subId", `item-${index}`);
       const res = await fetch("/api/admin/upload-about-image", {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("アップロードに失敗しました");
-      const { url } = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const message = (data as { error?: string }).error ?? "アップロードに失敗しました";
+        toast.error(message);
+        return;
+      }
+      const { url } = data as { url: string };
       updateItem(index, { image: url });
     } catch (err) {
       console.error(err);
+      toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
     }
   };
 

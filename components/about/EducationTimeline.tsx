@@ -14,6 +14,7 @@ import {
 import {
   getEducation,
   type EducationItem,
+  type EducationMemory,
 } from "@/lib/education";
 import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 
@@ -168,28 +169,43 @@ export function EducationTimeline() {
                 <div className="space-y-4">
                   <h4 className="text-sm font-semibold">思い出</h4>
                   <div className="space-y-4">
-                    {openItem.memories.map((memory, i) => (
-                      <div
-                        key={i}
-                        className="flex flex-col gap-2 sm:flex-row sm:gap-4"
-                      >
-                        {memory.image && (
-                          <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32">
-                            <EducationImage
-                              src={memory.image}
-                              alt={
-                                memory.imageAlt ??
-                                `${openItem.institution}の思い出写真`
-                              }
-                              className="h-full w-full"
-                            />
-                          </div>
-                        )}
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                          {memory.text}
-                        </p>
-                      </div>
-                    ))}
+                    {openItem.memories.map((memory: EducationMemory, i: number) => {
+                      const imgs =
+                        (memory.images?.length ?? 0) > 0
+                          ? memory.images!
+                          : memory.image
+                            ? [{ src: memory.image, alt: memory.imageAlt }]
+                            : [];
+                      return (
+                        <div
+                          key={i}
+                          className="flex flex-col gap-2 sm:flex-row sm:gap-4"
+                        >
+                          {imgs.length > 0 && (
+                            <div className="flex shrink-0 flex-wrap gap-2">
+                              {imgs.map((img, j) => (
+                                <div
+                                  key={j}
+                                  className="relative h-32 w-40 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32"
+                                >
+                                  <EducationImage
+                                    src={img.src}
+                                    alt={
+                                      img.alt ??
+                                      `${openItem.institution}の思い出写真`
+                                    }
+                                    className="h-full w-full"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {memory.text}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

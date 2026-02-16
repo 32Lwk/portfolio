@@ -4,11 +4,21 @@
     "institution": "名古屋大学 理学部物理学科",
     "description": "2028年3月卒業予定",
     "type": "大学",
-    "image": "/images/about/education/nagoya-univ.jpg",
+    "image": "/images/about/education/item-0/1771178921980-IMG_8891.jpg",
     "imageAlt": "名古屋大学",
     "memories": [
-      { "text": "宇宙物理の研究を志して入学。C研（理論宇宙物理学）を目指して日々勉学に励んでいます。" },
-      { "text": "キャンパスの四季の移ろいが美しく、特に東山キャンパスの桜と紅葉がお気に入りです。" }
+      {
+        "text": "宇宙物理の研究を志して入学。C研（理論宇宙物理学）を目指して日々勉学に励んでいます。"
+      },
+      {
+        "text": "キャンパスの四季の移ろいが美しく、特に東山キャンパスの桜と紅葉がお気に入りです。",
+        "images": [
+          {
+            "src": "/images/about/education/item-0-mem-1/1771181586918-IMG_9245.jpg",
+            "alt": ""
+          }
+        ]
+      }
     ]
   },
   {
@@ -16,11 +26,27 @@
     "institution": "和歌山県立向陽高等学校",
     "description": "",
     "type": "高校",
-    "image": "/images/about/education/koyo-high.jpg",
+    "image": "/images/about/education/item-1/1771179364866-Wakayama_Koyo_Junior_High_School_and_High_School__.jpg",
     "imageAlt": "和歌山県立向陽高等学校",
     "memories": [
-      { "text": "硬式テニス部に所属。部活動を通じて仲間と切磋琢磨した3年間でした。" },
-      { "text": "進路選択で理学の道を選び、物理への興味が深まった時期です。" }
+      {
+        "text": "硬式テニス部に所属。",
+        "images": [
+          {
+            "src": "/images/about/education/item-1-mem-0/1771181612759-LINE_ALBUM_portfolio_260216_56.jpg",
+            "alt": ""
+          }
+        ]
+      },
+      {
+        "text": "掛け替えのない親友を手に入れました。",
+        "images": [
+          {
+            "src": "/images/about/education/item-1-mem-1/1771181807928-S__114483206.jpg",
+            "alt": ""
+          }
+        ]
+      }
     ]
   },
   {
@@ -28,10 +54,18 @@
     "institution": "和歌山県立向陽中学校",
     "description": "中学受験",
     "type": "中学校",
-    "image": "/images/about/education/koyo-junior.jpg",
+    "image": "/images/about/education/item-2/1771179373335-Wakayama_Koyo_Junior_High_School_and_High_School__.jpg",
     "imageAlt": "和歌山県立向陽中学校",
     "memories": [
-      { "text": "中学受験を経て入学。軟式テニス部でスポーツに打ち込みました。" }
+      {
+        "text": "中学受験を経て入学。軟式テニス部でスポーツに打ち込みました。",
+        "images": [
+          {
+            "src": "/images/about/education/item-2-mem-0/1771181664437-LINE_ALBUM_portfolio_260216_56.jpg",
+            "alt": ""
+          }
+        ]
+      }
     ]
   },
   {
@@ -39,10 +73,12 @@
     "institution": "鳥屋城小学校",
     "description": "",
     "type": "小学校",
-    "image": "/images/about/education/toriyakijo-elementary.jpg",
+    "image": "/images/about/education/item-3/1771179407557-202401171039251149.jpg",
     "imageAlt": "鳥屋城小学校",
     "memories": [
-      { "text": "地元の小学校で6年間。友達と走り回ったグラウンドや、図書館で過ごした時間が懐かしいです。" }
+      {
+        "text": "地元の小学校で6年間。友達と走り回ったグラウンドや、図書館で過ごした時間が懐かしいです。"
+      }
     ]
   },
   {
@@ -50,10 +86,12 @@
     "institution": "金屋第一保育所（現在：金屋第一こども園）",
     "description": "",
     "type": "保育所",
-    "image": "/images/about/education/kanaya-hoikuen.jpg",
+    "image": "/images/about/education/item-4/1771179442858-aa40079ffdda2242c9f8a4eac6dc612e.jpg",
     "imageAlt": "金屋第一こども園",
     "memories": [
-      { "text": "幼少期を過ごした保育所。現在は金屋第一こども園として施設が続いています。" }
+      {
+        "text": "幼少期を過ごした保育所。現在は金屋第一こども園として施設が続いています。"
+      }
     ]
   },
   {
@@ -62,7 +100,9 @@
     "description": "和歌山市",
     "type": "誕生",
     "memories": [
-      { "text": "和歌山市で生まれました。" }
+      {
+        "text": "和歌山市で生まれました。"
+      }
     ]
   }
 ]

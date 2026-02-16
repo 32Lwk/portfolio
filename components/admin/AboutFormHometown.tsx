@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { HometownData } from "@/lib/hometown";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 
 interface AboutFormHometownProps {
@@ -24,15 +26,21 @@ export function AboutFormHometown({ data, onChange }: AboutFormHometownProps) {
     if (!file) return;
     e.target.value = "";
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("section", "hometown");
       const res = await fetch("/api/admin/upload-about-image", {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("アップロードに失敗しました");
-      const { url } = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const message = (data as { error?: string }).error ?? "アップロードに失敗しました";
+        toast.error(message);
+        return;
+      }
+      const { url } = data as { url: string };
       const idx = pendingIndexRef.current;
       const newImages = [...images];
       if (idx >= 0 && idx <= newImages.length) {
@@ -43,6 +51,7 @@ export function AboutFormHometown({ data, onChange }: AboutFormHometownProps) {
       onChange({ ...data, images: newImages });
     } catch (err) {
       console.error(err);
+      toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
     }
   };
 
@@ -67,7 +76,7 @@ export function AboutFormHometown({ data, onChange }: AboutFormHometownProps) {
       <div className="grid gap-2">
         <Label>タイトル</Label>
         <Input
-          value={data.title}
+          value={data.title ?? ""}
           onChange={(e) => onChange({ ...data, title: e.target.value })}
           placeholder="和歌山県有田郡有田川町"
         />
@@ -91,7 +100,7 @@ export function AboutFormHometown({ data, onChange }: AboutFormHometownProps) {
       <div className="grid gap-2">
         <Label>説明</Label>
         <Textarea
-          value={data.description}
+          value={data.description ?? ""}
           onChange={(e) => onChange({ ...data, description: e.target.value })}
           rows={4}
           placeholder="山椒が有名で美しい町です..."
@@ -114,7 +123,7 @@ export function AboutFormHometown({ data, onChange }: AboutFormHometownProps) {
                 <img src={img.src} alt={img.alt} className="h-full w-full object-cover" />
               </div>
               <Input
-                value={img.alt}
+                value={img.alt ?? ""}
                 onChange={(e) => updateImage(i, { alt: e.target.value })}
                 placeholder="代替テキスト"
                 className="w-24"
