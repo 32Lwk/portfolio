@@ -6,6 +6,7 @@ import rehypeRaw from "rehype-raw";
 import type { BlogPost } from "@/lib/blog";
 import type { BlogCategory } from "@/lib/blog-constants";
 import { BLOG_CATEGORIES } from "@/lib/blog-constants";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -306,8 +307,9 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
     setUploading(true);
     setError(null);
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("slug", slug.trim());
       const res = await fetch("/api/admin/upload-image", { method: "POST", body: form });
       if (!res.ok) {

@@ -168,45 +168,74 @@ export function AwardsSection() {
                 </div>
               )}
 
-              {/* 外部リンク */}
-              {openItem.url && (
-                <a
-                  href={openItem.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block text-sm text-primary hover:underline"
-                >
-                  詳細リンク →
-                </a>
-              )}
+              {/* 詳細リンク（複数） */}
+              {(() => {
+                const links: { label?: string; url: string }[] = (
+                  (openItem.urls?.length ?? 0) > 0
+                    ? openItem.urls
+                    : openItem.url
+                      ? [{ url: openItem.url }]
+                      : []
+                ).filter((link) => link.url?.trim());
+                if (links.length === 0) return null;
+                return (
+                  <div className="flex flex-wrap gap-3">
+                    {links.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-sm text-primary hover:underline"
+                      >
+                        {link.label?.trim() ? `${link.label} →` : "詳細リンク →"}
+                      </a>
+                    ))}
+                  </div>
+                );
+              })()}
 
               {/* 大会での写真や感想 */}
               {openItem.memories && openItem.memories.length > 0 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-semibold">大会での様子・感想</h4>
                   <div className="space-y-4">
-                    {openItem.memories.map((memory, i) => (
-                      <div
-                        key={i}
-                        className="flex flex-col gap-2 sm:flex-row sm:gap-4"
-                      >
-                        {memory.image && (
-                          <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32">
-                            <AwardImage
-                              src={memory.image}
-                              alt={
-                                memory.imageAlt ??
-                                `${openItem.title}の写真`
-                              }
-                              className="h-full w-full"
-                            />
-                          </div>
-                        )}
-                        <p className="text-sm leading-relaxed text-muted-foreground">
-                          {memory.text}
-                        </p>
-                      </div>
-                    ))}
+                    {openItem.memories.map((memory, i) => {
+                      const imgs: { src: string; alt?: string }[] =
+                        (memory.images?.length ?? 0) > 0
+                          ? memory.images ?? []
+                          : memory.image
+                            ? [{ src: memory.image, alt: memory.imageAlt }]
+                            : [];
+                      return (
+                        <div
+                          key={i}
+                          className="flex flex-col gap-2 sm:flex-row sm:gap-4"
+                        >
+                          {imgs.length > 0 && (
+                            <div className="flex shrink-0 flex-wrap gap-2">
+                              {imgs.map((img, j) => (
+                                <div
+                                  key={j}
+                                  className="relative h-32 w-40 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32"
+                                >
+                                  <AwardImage
+                                    src={img.src}
+                                    alt={
+                                      img.alt ?? `${openItem.title}の写真`
+                                    }
+                                    className="h-full w-full"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {memory.text}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

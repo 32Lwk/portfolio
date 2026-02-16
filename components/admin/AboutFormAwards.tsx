@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,8 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { AwardItem, AwardMemory } from "@/lib/awards";
+import type { AwardItem, AwardLink, AwardMemory } from "@/lib/awards";
 import { AWARD_TYPES } from "@/lib/about-constants";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { ImageIcon, Plus, Trash2 } from "lucide-react";
 
 interface AboutFormAwardsProps {
@@ -60,19 +62,26 @@ export function AboutFormAwards({ items, onChange }: AboutFormAwardsProps) {
     if (!file) return;
     e.target.value = "";
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("section", "awards");
       form.append("subId", `item-${index}`);
       const res = await fetch("/api/admin/upload-about-image", {
         method: "POST",
         body: form,
       });
-      if (!res.ok) throw new Error("アップロードに失敗しました");
-      const { url } = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const message = (data as { error?: string }).error ?? "アップロードに失敗しました";
+        toast.error(message);
+        return;
+      }
+      const { url } = data as { url: string };
       updateItem(index, { image: url });
     } catch (err) {
       console.error(err);
+      toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
     }
   };
 
@@ -97,6 +106,76 @@ export function AboutFormAwards({ items, onChange }: AboutFormAwardsProps) {
     const item = items[itemIndex];
     const memories = (item.memories ?? []).filter((_, i) => i !== memIndex);
     updateItem(itemIndex, { memories });
+  };
+
+  /** 感想の写真リスト（単一 image を images に正規化） */
+  const getMemoryImages = (mem: AwardMemory) =>
+    mem.images ?? (mem.image ? [{ src: mem.image, alt: mem.imageAlt }] : []);
+
+  const handleMemoryImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    itemIndex: number,
+    memIndex: number
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    const item = items[itemIndex];
+    const mem = item.memories?.[memIndex] ?? { text: "" };
+    const currentImages = getMemoryImages(mem);
+    try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
+      const form = new FormData();
+      form.append("file", fileToUpload);
+      form.append("section", "awards");
+      form.append("subId", `item-${itemIndex}-mem-${memIndex}`);
+      const res = await fetch("/api/admin/upload-about-image", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const message = (data as { error?: string }).error ?? "アップロードに失敗しました";
+        toast.error(message);
+        return;
+      }
+      const { url } = data as { url: string };
+      updateMemory(itemIndex, memIndex, {
+        images: [...currentImages, { src: url, alt: "" }],
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
+    }
+  };
+
+  const removeMemoryImage = (itemIndex: number, memIndex: number, imgIndex: number) => {
+    const item = items[itemIndex];
+    const mem = item.memories?.[memIndex] ?? { text: "" };
+    const currentImages = getMemoryImages(mem).filter((_, i) => i !== imgIndex);
+    updateMemory(itemIndex, memIndex, { images: currentImages });
+  };
+
+  /** 詳細リンク一覧（単一 url を urls に正規化） */
+  const getItemLinks = (item: AwardItem): AwardLink[] =>
+    item.urls ?? (item.url ? [{ url: item.url }] : []);
+
+  const setItemLinks = (itemIndex: number, links: AwardLink[]) => {
+    updateItem(itemIndex, { urls: links });
+  };
+
+  const updateMemoryImageAlt = (
+    itemIndex: number,
+    memIndex: number,
+    imgIndex: number,
+    alt: string
+  ) => {
+    const item = items[itemIndex];
+    const mem = item.memories?.[memIndex] ?? { text: "" };
+    const currentImages = getMemoryImages(mem).map((img, i) =>
+      i === imgIndex ? { ...img, alt: alt || undefined } : img
+    );
+    updateMemory(itemIndex, memIndex, { images: currentImages });
   };
 
   return (
@@ -188,12 +267,54 @@ export function AboutFormAwards({ items, onChange }: AboutFormAwardsProps) {
             />
           </div>
           <div className="mt-4 grid gap-2">
-            <Label>詳細リンク（任意）</Label>
-            <Input
-              value={item.url ?? ""}
-              onChange={(e) => updateItem(index, { url: e.target.value || undefined })}
-              placeholder="https://..."
-            />
+            <Label>詳細リンク（任意・複数可）</Label>
+            <div className="space-y-2">
+              {getItemLinks(item).map((link, linkIdx) => (
+                <div key={linkIdx} className="flex flex-col gap-1 rounded border p-2 sm:flex-row sm:items-end sm:gap-2">
+                  <Input
+                    value={link.label ?? ""}
+                    onChange={(e) => {
+                      const links = [...getItemLinks(item)];
+                      links[linkIdx] = { ...links[linkIdx], label: e.target.value || undefined };
+                      setItemLinks(index, links);
+                    }}
+                    placeholder="ラベル（任意）"
+                    className="sm:w-28"
+                  />
+                  <Input
+                    value={link.url}
+                    onChange={(e) => {
+                      const links = [...getItemLinks(item)];
+                      links[linkIdx] = { ...links[linkIdx], url: e.target.value };
+                      setItemLinks(index, links);
+                    }}
+                    placeholder="https://..."
+                    className="min-w-0 flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 shrink-0 p-0"
+                    onClick={() => {
+                      const links = getItemLinks(item).filter((_, i) => i !== linkIdx);
+                      setItemLinks(index, links);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setItemLinks(index, [...getItemLinks(item), { url: "" }])}
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                リンクを追加
+              </Button>
+            </div>
           </div>
           <div className="mt-4 grid gap-2">
             <Label>大会の写真</Label>
@@ -241,15 +362,64 @@ export function AboutFormAwards({ items, onChange }: AboutFormAwardsProps) {
                 <AccordionItem key={mi} value={`mem-${index}-${mi}`}>
                   <AccordionTrigger>感想 {mi + 1}</AccordionTrigger>
                   <AccordionContent>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <Textarea
-                        value={mem.text}
+                        value={mem.text ?? ""}
                         onChange={(e) =>
                           updateMemory(index, mi, { text: e.target.value })
                         }
                         rows={2}
                         placeholder="大会での様子や感想"
                       />
+                      <div className="space-y-2">
+                        <Label className="text-xs">写真（複数可）</Label>
+                        <input
+                          ref={(el) => {
+                            fileRefs.current[`mem-img-${index}-${mi}`] = el;
+                          }}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleMemoryImageUpload(e, index, mi)}
+                        />
+                        <div className="flex flex-wrap items-end gap-3">
+                          {getMemoryImages(mem).map((img, imgIdx) => (
+                            <div key={imgIdx} className="flex flex-col gap-1">
+                              <div className="h-16 w-20 overflow-hidden rounded border bg-muted">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={img.src} alt={img.alt ?? ""} className="h-full w-full object-cover" />
+                              </div>
+                              <Input
+                                value={img.alt ?? ""}
+                                onChange={(e) =>
+                                  updateMemoryImageAlt(index, mi, imgIdx, e.target.value)
+                                }
+                                placeholder="代替テキスト"
+                                className="h-8 w-20 text-xs"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-20 text-xs"
+                                onClick={() => removeMemoryImage(index, mi, imgIdx)}
+                              >
+                                <Trash2 className="mr-1 h-3 w-3" />
+                                削除
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => fileRefs.current[`mem-img-${index}-${mi}`]?.click()}
+                          >
+                            <ImageIcon className="mr-1 h-4 w-4" />
+                            写真を追加
+                          </Button>
+                        </div>
+                      </div>
                       <Button
                         type="button"
                         variant="ghost"
@@ -257,7 +427,7 @@ export function AboutFormAwards({ items, onChange }: AboutFormAwardsProps) {
                         onClick={() => removeMemory(index, mi)}
                       >
                         <Trash2 className="mr-1 h-4 w-4" />
-                        削除
+                        この感想を削除
                       </Button>
                     </div>
                   </AccordionContent>

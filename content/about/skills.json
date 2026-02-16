@@ -121,7 +121,7 @@
     "name": "Linux",
     "icon": "linux",
     "level": "Intermediate",
-    "years": 2,
+    "years": 1,
     "startDate": "2024-04",
     "description": "サーバー運用、シェルスクリプト"
   },
@@ -139,7 +139,7 @@
     "name": "GCP Cloud Run",
     "icon": "googlecloud",
     "level": "Intermediate",
-    "years": 1,
+    "years": 0,
     "startDate": "2025-01",
     "description": "サーバーレスコンテナ実行"
   },

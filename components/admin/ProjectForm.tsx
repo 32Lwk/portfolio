@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import type { Project, SubProject, MediaItem } from "@/lib/projects";
+import { convertHeicToJpegIfNeeded } from "@/lib/heic-to-jpeg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -223,8 +224,9 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
     setUploading(true);
     setError(null);
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("projectId", projectIdForUpload);
       form.append("subId", sub.id);
       const res = await fetch("/api/admin/upload-project-image", { method: "POST", body: form });
@@ -253,8 +255,9 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
     setUploading(true);
     setError(null);
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("projectId", projectIdForUpload);
       form.append("subId", sub.id);
       const res = await fetch("/api/admin/upload-project-image", { method: "POST", body: form });
@@ -320,8 +323,9 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
     setUploading(true);
     setError(null);
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("projectId", projectIdForUpload);
       const res = await fetch("/api/admin/upload-project-image", { method: "POST", body: form });
       if (!res.ok) {
@@ -375,8 +379,9 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
     setUploading(true);
     setError(null);
     try {
+      const fileToUpload = await convertHeicToJpegIfNeeded(file);
       const form = new FormData();
-      form.append("file", file);
+      form.append("file", fileToUpload);
       form.append("projectId", projectIdForUpload);
       const res = await fetch("/api/admin/upload-project-image", { method: "POST", body: form });
       if (!res.ok) {

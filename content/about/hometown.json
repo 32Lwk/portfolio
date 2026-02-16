@@ -1,32 +1,33 @@
 {
-  "title": "和歌山県有田郡有田川町",
-  "badge": "出身地",
-  "badgeLabel": "生まれ育った町",
-  "description": "山椒が有名で美しい町です。実家の近くにドラッグストアがなく、最寄りまで5km。車がなければ薬一つ買いに行けない地域で育った経験が、誰もがどこでも安心して必要な情報やサービスにアクセスできる社会を作りたいという想いの原点になっています。",
+  "url": "/images/about/hometown/1771180070191-LINE_ALBUM_portfolio_260216_95.jpg",
   "images": [
     {
-      "src": "/images/about/hometown/wakayama-1.jpg",
-      "alt": "和歌山の風景1"
+      "src": "/images/about/hometown/1771180010195-46000000000000006471_0000016471_3.jpg",
+      "alt": "画像"
     },
     {
-      "src": "/images/about/hometown/wakayama-2.jpg",
-      "alt": "和歌山の風景2"
+      "src": "/images/about/hometown/1771180025128-sample_aragijima5.jpg",
+      "alt": "画像"
     },
     {
-      "src": "/images/about/hometown/wakayama-3.jpg",
-      "alt": "和歌山の風景3"
+      "src": "/images/about/hometown/1771180030211-02301_4800196_01.jpg",
+      "alt": "画像"
     },
     {
-      "src": "/images/about/hometown/wakayama-4.jpg",
-      "alt": "和歌山の風景4"
+      "src": "/images/about/hometown/1771180036538-f95cb7e95dcb5de0f491d8ba378252be.jpg",
+      "alt": "画像"
     },
     {
-      "src": "/images/about/hometown/wakayama-5.jpg",
-      "alt": "和歌山の風景5"
+      "src": "/images/about/hometown/1771180054347-LINE_ALBUM_portfolio_260216_84.jpg",
+      "alt": "画像"
     },
     {
-      "src": "/images/about/hometown/wakayama-6.jpg",
-      "alt": "和歌山の風景6"
+      "src": "/images/about/hometown/1771180070191-LINE_ALBUM_portfolio_260216_95.jpg",
+      "alt": "画像"
     }
-  ]
+  ],
+  "title": "和歌山県有田郡有田川町",
+  "badge": "和歌山",
+  "badgeLabel": "生まれ育った町",
+  "description": "町の大部分を山々と有田川が占める自然豊かな地域で、特にみかんの産地として知られています。山の斜面一面に広がるみかん畑は、この町ならではの風景です。"
 }

@@ -5,7 +5,29 @@
     "organizer": "AWSジャパン",
     "description": "大規模言語モデルを用いた安全で最適な市販薬提案チャットツール",
     "type": "大会",
-    "memories": []
+    "memories": [
+      {
+        "text": "",
+        "images": [
+          {
+            "src": "/images/about/awards/item-0-mem-0/1771181842525-6CBE6D45-0E37-4A8C-9AD1-EFAAFF04712A.jpg",
+            "alt": ""
+          }
+        ]
+      }
+    ],
+    "image": "/images/about/awards/item-0/1771181846224-32DB4F14-70F5-4D97-89AE-854589DADB75.jpg",
+    "result": "本戦出場",
+    "urls": [
+      {
+        "url": "https://pages.awscloud.com/rs/112-TZM-766/images/nagoya_aws_digital_society_tour2025.pdf",
+        "label": "AWS"
+      },
+      {
+        "url": "https://biz.chunichi.co.jp/news/article/10/112289/517/",
+        "label": "NEWS"
+      }
+    ]
   },
   {
     "period": "2025年11月21日",
@@ -13,7 +35,20 @@
     "organizer": "愛知100選編集事務局",
     "description": "AIが支える安心セルフメディケーション - チャット型医薬品相談ツール",
     "type": "コンテスト",
-    "memories": []
+    "memories": [],
+    "result": "最優秀賞",
+    "url": "https://aichi-select.net/ai_contest/",
+    "image": "/images/about/awards/item-1/1771181974967-74E440E3-B880-4F1C-A71A-D2B9EE20D102.jpg",
+    "urls": [
+      {
+        "url": "https://aichi-select.net/ai_contest/",
+        "label": "サイト"
+      },
+      {
+        "url": "https://biz.chunichi.co.jp/news/article/10/117877/36/",
+        "label": "NEWS"
+      }
+    ]
   },
   {
     "period": "2025年12月6日",
@@ -21,7 +56,15 @@
     "organizer": "椙山女学園大学",
     "description": "AIが支える安心セルフメディケーション - チャット型医薬品相談ツール",
     "type": "コンテスト",
-    "memories": []
+    "memories": [],
+    "result": "優秀賞",
+    "image": "/images/about/awards/item-2/1771182012611-5AD1054E-59BC-4AB4-8B04-E6E5E4DBED3F.jpg",
+    "urls": [
+      {
+        "url": "https://www.sugiyama-u.ac.jp/univ/academics/mgt/manage/biscon/ogo7gd000000dsoz.html",
+        "label": "サイト"
+      }
+    ]
   },
   {
     "period": "2025年12月13日",
@@ -29,7 +72,14 @@
     "organizer": "和歌山県",
     "description": "AIが支える安心セルフメディケーション - チャット型医薬品相談ツール",
     "type": "コンテスト",
-    "memories": []
+    "memories": [],
+    "result": "クオリティソフト賞",
+    "urls": [
+      {
+        "url": "https://www.pref.wakayama.lg.jp/prefg/020100/data/competition/2025_9.html",
+        "label": "サイト"
+      }
+    ]
   },
   {
     "period": "2026年1月17日",
@@ -37,6 +87,23 @@
     "organizer": "dodaキャンパス キャリアゲートウェイ事務局",
     "description": "AIが支える安心セルフメディケーション - チャット型医薬品相談ツール",
     "type": "コンテスト",
-    "memories": []
+    "memories": [
+      {
+        "text": "",
+        "images": [
+          {
+            "src": "/images/about/awards/item-4-mem-0/1771182073162-40D0DA26-2F34-4914-B447-48B229F8B6BE.jpg",
+            "alt": ""
+          },
+          {
+            "src": "/images/about/awards/item-4-mem-0/1771182086726-F13DC084-20CE-4997-B852-074B108686D5.jpg",
+            "alt": ""
+          }
+        ]
+      }
+    ],
+    "result": "審査員特別賞",
+    "urls": [],
+    "image": "/images/about/awards/item-4/1771182062591-A10732B1-596A-4D6D-9EDB-3E12BF0C2F4D.jpg"
   }
 ]
