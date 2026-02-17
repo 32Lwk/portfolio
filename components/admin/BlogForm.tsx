@@ -115,7 +115,7 @@ function parseImagesInContent(text: string): ContentImage[] {
 export type BlogFormInitial = Partial<
   Pick<
     BlogPost,
-    "slug" | "title" | "description" | "date" | "category" | "tags" | "content" | "featured" | "draft"
+    "slug" | "title" | "description" | "date" | "category" | "tags" | "content" | "featured" | "draft" | "hidden"
   >
 > & { oldSlug?: string };
 
