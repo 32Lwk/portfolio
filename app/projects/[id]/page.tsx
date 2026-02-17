@@ -335,14 +335,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                           src={screenshot.thumbnail}
                           alt={screenshot.alt}
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                          sizes="(max-width: 768px) 100vw, 600px"
                         />
                       ) : (
                         <ScreenshotImage
                           src={screenshot.url}
                           alt={screenshot.alt}
                           className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                          sizes="(max-width: 768px) 100vw, 600px"
                         />
                       )}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/10">
@@ -424,7 +424,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                               alt={video.alt}
                               fill
                               className="object-cover transition-transform duration-300 group-hover:scale-105"
-                              sizes="(max-width: 768px) 100vw, 50vw"
+                              sizes="(max-width: 768px) 100vw, 600px"
                             />
                           ) : (
                             <div className="flex h-full items-center justify-center">

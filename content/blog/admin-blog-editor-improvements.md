@@ -1,11 +1,18 @@
 ---
-title: "管理画面のブログエディタ改善まとめ ― スラッグ・Markdown・画像まわりの詳細"
-description: "ポートフォリオサイトの管理画面において、ブログ記事の執筆・編集を快適にするためにおこなった改善の全内容を、仕様と理由を含めて詳しくまとめました。"
-date: "2026-02-14"
-category: "技術"
-tags: ["管理画面", "ブログ", "Markdown", "UI改善", "Next.js", "画像"]
-slug: "admin-blog-editor-improvements"
+title: 管理画面のブログエディタ改善まとめ ― スラッグ・Markdown・画像まわりの詳細
+description: ポートフォリオサイトの管理画面において、ブログ記事の執筆・編集を快適にするためにおこなった改善の全内容を、仕様と理由を含めて詳しくまとめました。
+date: '2026-02-14'
+category: 技術
+tags:
+  - 管理画面
+  - ブログ
+  - Markdown
+  - UI改善
+  - Next.js
+  - 画像
+slug: admin-blog-editor-improvements
 featured: false
+hidden: true
 ---
 
 # 管理画面のブログエディタ改善まとめ ― スラッグ・Markdown・画像まわりの詳細

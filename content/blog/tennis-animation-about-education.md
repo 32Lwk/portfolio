@@ -1,12 +1,17 @@
 ---
-title: "About ページの学歴セクションにテニスサーブアニメーションを追加しました"
-description: "学歴（中高・大学）を表示する About ページに、Canvas で描画するテニスサーブのアニメーションを追加した話です。"
-date: "2026-02-14"
-category: "技術"
-tags: ["Next.js", "Canvas", "アニメーション", "About"]
-author: "川嶋宥翔"
-slug: "tennis-animation-about-education"
+title: About ページの学歴セクションにテニスサーブアニメーションを追加しました
+description: 学歴（中高・大学）を表示する About ページに、Canvas で描画するテニスサーブのアニメーションを追加した話です。
+date: '2026-02-14'
+category: 技術
+tags:
+  - Next.js
+  - Canvas
+  - アニメーション
+  - About
+author: 川嶋宥翔
+slug: tennis-animation-about-education
 featured: false
+hidden: false
 ---
 
 # About ページの学歴セクションにテニスサーブアニメーションを追加しました

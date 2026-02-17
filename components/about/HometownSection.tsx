@@ -23,7 +23,7 @@ function HometownImage({
           alt={alt}
           fill
           className="object-cover"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
           onError={() => setHasError(true)}
         />
       ) : (

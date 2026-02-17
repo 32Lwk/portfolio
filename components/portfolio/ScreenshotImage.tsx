@@ -27,7 +27,7 @@ export function ScreenshotImage({ src, alt, className, sizes }: ScreenshotImageP
       alt={alt}
       fill
       className={className}
-      sizes={sizes}
+      sizes={sizes ?? "(max-width: 768px) 100vw, 600px"}
       onError={() => setHasError(true)}
     />
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface SafeImageProps {
   src?: string;
@@ -27,27 +27,8 @@ export function SafeImage({
   aspectRatio,
 }: SafeImageProps) {
   const [hasError, setHasError] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | undefined>(src);
 
-  useEffect(() => {
-    if (src) {
-      const img = new window.Image();
-      img.onerror = () => {
-        setHasError(true);
-        setImageSrc(undefined);
-      };
-      img.onload = () => {
-        setHasError(false);
-        setImageSrc(src);
-      };
-      img.src = src;
-    } else {
-      setHasError(true);
-      setImageSrc(undefined);
-    }
-  }, [src]);
-
-  if (!imageSrc || hasError) {
+  if (!src || hasError) {
     const containerClass = aspectRatio
       ? `relative w-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center ${aspectRatio}`
       : "h-48 w-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center";
@@ -61,35 +42,35 @@ export function SafeImage({
   if (fill) {
     return (
       <Image
-        src={imageSrc}
+        src={src}
         alt={alt}
         fill
         className={className}
-        sizes={sizes}
+        sizes={sizes ?? "(max-width: 768px) 100vw, 1200px"}
         priority={priority}
+        quality={85}
         onError={() => {
           setHasError(true);
-          setImageSrc(undefined);
         }}
-        unoptimized={imageSrc.startsWith("http")}
+        unoptimized={src.startsWith("http://") || src.startsWith("https://")}
       />
     );
   }
 
   return (
     <Image
-      src={imageSrc}
+      src={src}
       alt={alt}
       width={width}
       height={height}
       className={className}
       sizes={sizes}
       priority={priority}
+      quality={85}
       onError={() => {
         setHasError(true);
-        setImageSrc(undefined);
       }}
-      unoptimized={imageSrc.startsWith("http")}
+      unoptimized={src.startsWith("http://") || src.startsWith("https://")}
     />
   );
 }

@@ -8,6 +8,7 @@ import { BLOG_CATEGORIES } from "@/lib/blog-constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -48,6 +49,14 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
   const [sortBy, setSortBy] = useState<BlogListSort>("dateDesc");
   const [deleting, setDeleting] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ slug: string; title: string } | null>(null);
+  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
+  const [bulkUpdating, setBulkUpdating] = useState(false);
+  const [visibilityDialog, setVisibilityDialog] = useState<{
+    slug: string;
+    title: string;
+    currentHidden: boolean;
+  } | null>(null);
+  const [updatingVisibility, setUpdatingVisibility] = useState<string | null>(null);
 
   const executeDelete = async (slug: string) => {
     setDeleting(slug);
@@ -73,6 +82,103 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
   const openDeleteModal = (post: BlogPost) => setDeleteTarget({ slug: post.slug, title: post.title });
   const closeDeleteModal = () => {
     if (!deleting) setDeleteTarget(null);
+  };
+
+  const toggleSelect = (slug: string) => {
+    setSelectedSlugs((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) {
+        next.delete(slug);
+      } else {
+        next.add(slug);
+      }
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedSlugs.size === filteredAndSorted.length) {
+      setSelectedSlugs(new Set());
+    } else {
+      setSelectedSlugs(new Set(filteredAndSorted.map((p) => p.slug)));
+    }
+  };
+
+  const bulkUpdateVisibility = async (hidden: boolean) => {
+    if (selectedSlugs.size === 0) return;
+
+    setBulkUpdating(true);
+    try {
+      const res = await fetch("/api/admin/bulk-update-blog-visibility", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slugs: Array.from(selectedSlugs),
+          hidden,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(`更新に失敗しました: ${data.error || "Unknown error"}`);
+        return;
+      }
+
+      const data = await res.json();
+      if (data.summary.failed > 0) {
+        alert(
+          `${data.summary.success}件の更新に成功しましたが、${data.summary.failed}件の更新に失敗しました。`
+        );
+      }
+
+      setSelectedSlugs(new Set());
+      router.refresh();
+    } catch (error) {
+      alert(`更新に失敗しました: ${error instanceof Error ? error.message : "Unknown error"}`);
+    } finally {
+      setBulkUpdating(false);
+    }
+  };
+
+  const openVisibilityDialog = (post: BlogPost) => {
+    setVisibilityDialog({
+      slug: post.slug,
+      title: post.title,
+      currentHidden: post.hidden ?? false,
+    });
+  };
+
+  const closeVisibilityDialog = () => {
+    if (!updatingVisibility) setVisibilityDialog(null);
+  };
+
+  const executeVisibilityChange = async () => {
+    if (!visibilityDialog) return;
+
+    setUpdatingVisibility(visibilityDialog.slug);
+    try {
+      const res = await fetch("/api/admin/bulk-update-blog-visibility", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slugs: [visibilityDialog.slug],
+          hidden: !visibilityDialog.currentHidden,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(`更新に失敗しました: ${data.error || "Unknown error"}`);
+        return;
+      }
+
+      setVisibilityDialog(null);
+      router.refresh();
+    } catch (error) {
+      alert(`更新に失敗しました: ${error instanceof Error ? error.message : "Unknown error"}`);
+    } finally {
+      setUpdatingVisibility(null);
+    }
   };
 
   const filteredAndSorted = useMemo(() => {
@@ -122,6 +228,8 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
     );
   }
 
+  const allSelected = filteredAndSorted.length > 0 && selectedSlugs.size === filteredAndSorted.length;
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
@@ -161,11 +269,53 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
         </Button>
       </div>
 
+      {selectedSlugs.size > 0 && (
+        <div className="flex items-center gap-2 rounded-md border bg-muted/50 p-3">
+          <span className="text-sm font-medium">
+            {selectedSlugs.size}件選択中
+          </span>
+          <div className="flex gap-2 ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => bulkUpdateVisibility(false)}
+              disabled={bulkUpdating}
+            >
+              {bulkUpdating ? "更新中..." : "公開にする"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => bulkUpdateVisibility(true)}
+              disabled={bulkUpdating}
+            >
+              {bulkUpdating ? "更新中..." : "非表示にする"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedSlugs(new Set())}
+              disabled={bulkUpdating}
+            >
+              選択解除
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox
+                  checked={allSelected}
+                  onCheckedChange={toggleSelectAll}
+                  aria-label="すべて選択"
+                />
+              </TableHead>
               <TableHead>タイトル</TableHead>
+              <TableHead className="w-[80px]">注目</TableHead>
               <TableHead>日付</TableHead>
               <TableHead>カテゴリ</TableHead>
               <TableHead>状態</TableHead>
@@ -175,21 +325,34 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
           <TableBody>
             {filteredAndSorted.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell colSpan={7} className="text-center text-muted-foreground">
                   該当する記事がありません
                 </TableCell>
               </TableRow>
             ) : (
               filteredAndSorted.map((post) => (
                 <TableRow key={post.slug}>
-                  <TableCell className="font-medium">{post.title}</TableCell>
-                  <TableCell>{post.date}</TableCell>
-                  <TableCell>{post.category}</TableCell>
                   <TableCell>
-                    <span className="flex gap-1">
-                      {post.featured && <Badge variant="secondary">注目</Badge>}
-                      {post.draft && <Badge variant="outline">下書き</Badge>}
-                    </span>
+                    <Checkbox
+                      checked={selectedSlugs.has(post.slug)}
+                      onCheckedChange={() => toggleSelect(post.slug)}
+                      aria-label={`${post.title}を選択`}
+                    />
+                  </TableCell>
+                  <TableCell className="font-medium">{post.title}</TableCell>
+                  <TableCell>
+                    {post.featured && <Badge variant="secondary">注目</Badge>}
+                  </TableCell>
+                  <TableCell>{post.date}</TableCell>
+                  <TableCell className="text-xs">{post.category}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={post.hidden ? "destructive" : "default"}
+                      className="cursor-pointer hover:opacity-80 transition-opacity text-[10px] px-2 py-0.5 whitespace-nowrap min-w-[45px] justify-center"
+                      onClick={() => openVisibilityDialog(post)}
+                    >
+                      {post.hidden ? "非表示" : "公開"}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
@@ -237,6 +400,42 @@ export function AdminBlogList({ posts }: { posts: BlogPost[] }) {
               }}
             >
               {deleteTarget && deleting === deleteTarget.slug ? "削除中..." : "削除する"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!visibilityDialog}
+        onOpenChange={(open) => !open && closeVisibilityDialog()}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {visibilityDialog?.currentHidden ? "ブログを公開しますか？" : "ブログを非表示にしますか？"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {visibilityDialog && (
+                <>
+                  「{visibilityDialog.title}」を
+                  {visibilityDialog.currentHidden ? "公開" : "非表示"}にします。
+                  {visibilityDialog.currentHidden
+                    ? "公開すると、公開ページに表示されるようになります。"
+                    : "非表示にすると、公開ページから表示されなくなります。"}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={!!updatingVisibility}>キャンセル</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={!!updatingVisibility}
+              onClick={(e) => {
+                e.preventDefault();
+                executeVisibilityChange();
+              }}
+            >
+              {updatingVisibility ? "更新中..." : visibilityDialog?.currentHidden ? "公開する" : "非表示にする"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

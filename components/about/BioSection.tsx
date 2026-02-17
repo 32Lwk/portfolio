@@ -24,7 +24,7 @@ function BioBlockImage({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         fill
         className="object-cover"
-        sizes="(max-width: 768px) 100vw, 672px"
+        sizes="(max-width: 768px) 100vw, 896px"
         onError={() => setHasError(true)}
       />
     </div>

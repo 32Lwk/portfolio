@@ -209,6 +209,66 @@ export function AboutForm({ initial }: AboutFormProps) {
     return null;
   }, [data]);
 
+  const checkImageExists = async (imagePath: string): Promise<boolean> => {
+    if (!imagePath || imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return true; // 外部URLはスキップ
+    }
+    try {
+      const res = await fetch("/api/admin/check-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagePath }),
+      });
+      const data = await res.json();
+      return data.exists === true;
+    } catch {
+      return false;
+    }
+  };
+
+  const validateImagesInSection = async (section: string, sectionData: unknown): Promise<string | null> => {
+    const missingImages: string[] = [];
+
+    switch (section) {
+      case "hero": {
+        const hero = sectionData as HeroData;
+        if (hero.image && !(await checkImageExists(hero.image))) {
+          missingImages.push(`Hero画像: ${hero.image}`);
+        }
+        break;
+      }
+      case "bio": {
+        const bio = sectionData as BioData;
+        if (bio.blocks) {
+          for (let i = 0; i < bio.blocks.length; i++) {
+            const block = bio.blocks[i];
+            if (block.type === "image" && block.src && !(await checkImageExists(block.src))) {
+              missingImages.push(`Bioブロック ${i + 1} の画像: ${block.src}`);
+            }
+          }
+        }
+        break;
+      }
+      case "hometown": {
+        const hometown = sectionData as HometownData;
+        if (hometown.images) {
+          for (let i = 0; i < hometown.images.length; i++) {
+            const img = hometown.images[i];
+            if (img.src && !(await checkImageExists(img.src))) {
+              missingImages.push(`出身地画像 ${i + 1}: ${img.src}`);
+            }
+          }
+        }
+        break;
+      }
+    }
+
+    if (missingImages.length > 0) {
+      return `以下の画像ファイルが見つかりません:\n\n${missingImages.join("\n")}\n\n画像をアップロードするか、正しいパスを入力してください。`;
+    }
+    return null;
+  };
+
   const handleSaveAll = useCallback(async () => {
     if (dirtySections.size === 0) return;
     const sections = Array.from(dirtySections);
@@ -224,6 +284,15 @@ export function AboutForm({ initial }: AboutFormProps) {
     for (const section of sections) {
       try {
         const sectionData = data[section as keyof AboutFormData];
+        
+        // 画像の存在確認
+        const imageError = await validateImagesInSection(section, sectionData);
+        if (imageError) {
+          toast.error(`${SECTION_LABELS[section as keyof typeof SECTION_LABELS] ?? section}: ${imageError}`);
+          failed = true;
+          continue;
+        }
+
         const res = await fetch("/api/admin/save-about", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -289,6 +358,15 @@ export function AboutForm({ initial }: AboutFormProps) {
       setSavingSection(section);
       try {
         const sectionData = data[section as keyof AboutFormData];
+        
+        // 画像の存在確認
+        const imageError = await validateImagesInSection(section, sectionData);
+        if (imageError) {
+          toast.error(imageError);
+          setSavingSection(null);
+          return;
+        }
+
         const res = await fetch("/api/admin/save-about", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

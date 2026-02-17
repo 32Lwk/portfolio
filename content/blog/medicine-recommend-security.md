@@ -1,18 +1,23 @@
 ---
-title: "セキュリティ機能の実装 - プロンプトインジェクション対策と入力検証"
-description: "医療情報システムとして必須のセキュリティ機能、特にプロンプトインジェクション対策と入力検証の実装について"
-date: "2025-12-09"
-category: "プロジェクト"
-tags: ["医薬品相談ツール", "セキュリティ"]
-author: "川嶋宥翔"
+title: セキュリティ機能の実装 - プロンプトインジェクション対策と入力検証
+description: 医療情報システムとして必須のセキュリティ機能、特にプロンプトインジェクション対策と入力検証の実装について
+date: '2025-12-09'
+category: プロジェクト
+tags:
+  - 医薬品相談ツール
+  - セキュリティ
+author: 川嶋宥翔
 featured: false
+hidden: false
 ---
 
 # セキュリティ機能の実装 - プロンプトインジェクション対策と入力検証
 
 医療情報システムとして、セキュリティは最優先事項です。この記事では、プロンプトインジェクション対策と入力検証の実装について詳しく解説します。
 
-## セキュリティの多層防御
+## セキュリティの多層防御（README・リポジトリとの対応）
+
+[medicine-recommend-system](https://github.com/32Lwk/medicine-recommend-system) では、入力検証とブロック時の永続化は **`src/handlers/chat/chat_input_validator.py`** に集約されています。絶対ブロックは **`src/security/absolute_blocklist.py`**、リスクスコア・プロンプトインジェクション検出は **`src/security/security_validator.py`**、危機キーワードは **`src/core/crisis_detection.py`** で実装されています。ブロック時はセッションに案内メッセージを追加したうえで **`_persist_block_messages_to_db`** によりDB（またはメモリ）に保存し、`status: 'ok'` と `message_count` で返すため、フロントで必ず案内が表示されます。
 
 システムは以下の3層でセキュリティを確保しています：
 

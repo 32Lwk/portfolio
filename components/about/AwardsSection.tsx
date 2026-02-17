@@ -19,10 +19,13 @@ function AwardImage({
   src,
   alt,
   className,
+  sizes = "(max-width: 768px) 96px, 112px",
 }: {
   src: string;
   alt: string;
   className?: string;
+  /** モーダル内のメイン写真は大きいので 672px 等を指定すること */
+  sizes?: string;
 }) {
   const [hasError, setHasError] = useState(false);
   return (
@@ -38,7 +41,7 @@ function AwardImage({
           alt={alt}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 96px, 112px"
+          sizes={sizes}
           onError={() => setHasError(true)}
         />
       ) : (
@@ -164,6 +167,7 @@ export function AwardsSection() {
                       `${openItem.title}の写真`
                     }
                     className="h-full w-full"
+                    sizes="(max-width: 768px) 100vw, 672px"
                   />
                 </div>
               )}
@@ -225,6 +229,7 @@ export function AwardsSection() {
                                       img.alt ?? `${openItem.title}の写真`
                                     }
                                     className="h-full w-full"
+                                    sizes="(max-width: 640px) 160px, 128px"
                                   />
                                 </div>
                               ))}
