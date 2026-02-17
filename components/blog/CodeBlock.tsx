@@ -50,7 +50,10 @@ export function CodeBlock({ code, language }: CodeBlockProps) {
   };
 
   return (
-    <div className="group relative mb-4">
+    <div
+      className="code-block-scroll group relative mb-4 min-w-0 w-full max-w-full overflow-x-scroll overflow-y-hidden rounded-lg"
+      style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+    >
       <SyntaxHighlighter
         language={language}
         style={isDark ? oneDark : oneLight}
@@ -60,8 +63,12 @@ export function CodeBlock({ code, language }: CodeBlockProps) {
           padding: "1rem",
           fontSize: "0.875rem",
           background: isDark ? "#1e1e1e" : "#f5f5f5",
+          minWidth: "min-content",
         }}
         PreTag="div"
+        codeTagProps={{
+          style: { whiteSpace: "pre" },
+        }}
       >
         {code}
       </SyntaxHighlighter>
