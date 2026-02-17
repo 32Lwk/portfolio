@@ -46,3 +46,9 @@ next-env.d.ts
 
 # cache
 .cache/
+
+# LaTeX (resume) build artifacts
+/resume/*.aux
+/resume/*.log
+/resume/*.out
+/resume/resume.pdf
