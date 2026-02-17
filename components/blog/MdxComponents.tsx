@@ -88,11 +88,9 @@ export const mdxComponents = {
 
     return <CodeBlock code={codeString} language={language} />;
   },
-  pre: (props: React.HTMLAttributes<HTMLPreElement> & { children?: React.ReactNode }) => {
-    // next-mdx-remoteでは、コードブロックは通常codeコンポーネントで処理される
-    // preタグはそのまま返す（codeコンポーネントがCodeBlockを返す）
-    return <pre {...props} />;
-  },
+  pre: (props: React.HTMLAttributes<HTMLPreElement> & { children?: React.ReactNode }) => (
+    <pre {...props} className={`max-w-full overflow-x-auto ${props.className ?? ""}`.trim()} />
+  ),
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!props.src || typeof props.src !== "string") return null;
     const width = props.width;

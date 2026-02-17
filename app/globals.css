@@ -231,6 +231,33 @@
   @apply bg-muted-foreground/50;
 }
 
+/* コードブロック用：横スクロールバーを常に表示（スマホでも分かりやすく） */
+.code-block-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) hsl(var(--background));
+}
+
+/* 横スクロールバーの高さ（スマホ含む） */
+.code-block-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.code-block-scroll::-webkit-scrollbar-track {
+  @apply bg-muted/50 rounded-lg;
+}
+
+.code-block-scroll::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full;
+}
+
+.code-block-scroll::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+.code-block-scroll::-webkit-scrollbar-corner {
+  @apply bg-muted/50 rounded-lg;
+}
+
 /* Prose styles for blog content */
 .prose {
   @apply text-foreground;
@@ -282,7 +309,7 @@
 }
 
 .prose pre {
-  @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
+  @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4 max-w-full;
 }
 
 .prose pre code {

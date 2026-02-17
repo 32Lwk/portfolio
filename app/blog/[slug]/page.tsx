@@ -123,7 +123,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <ShareButtons title={post.title} url={postUrl} />
                 </div>
               </header>
-          <div className="prose prose-slate dark:prose-invert max-w-none break-words">
+          <div className="prose prose-slate dark:prose-invert max-w-none min-w-0 break-words overflow-x-auto">
             <MDXRemote
               source={post.content}
               components={mdxComponents}
