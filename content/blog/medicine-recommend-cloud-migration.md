@@ -1,27 +1,36 @@
 ---
-title: "クラウド移行の経験 - RenderからGCP Cloud Runへの移行"
-description: "RenderからGCP Cloud Runへの移行、Neon PostgreSQLへの移行、GitHub連携による継続的デプロイの実装について"
-date: "2026-02-11"
-category: "プロジェクト"
-tags: ["医薬品相談ツール", "クラウド", "GCP"]
-author: "川嶋宥翔"
+title: クラウド移行の経験 - RenderからGCP Cloud Runへの移行
+description: RenderからGCP Cloud Runへの移行、Neon PostgreSQLへの移行、GitHub連携による継続的デプロイの実装について
+date: '2026-02-11'
+category: プロジェクト
+tags:
+  - 医薬品相談ツール
+  - クラウド
+  - GCP
+author: 川嶋宥翔
 featured: false
+hidden: false
 ---
 
 # クラウド移行の経験 - RenderからGCP Cloud Runへの移行
 
-コスト削減とスケーラビリティの向上を目指し、RenderからGCP Cloud Runへ移行しました。この記事では、移行の背景、実装の詳細、そしてトラブルシューティングについて解説します。
+コスト削減とスケーラビリティの向上を目指し、RenderからGCP Cloud Runへ、Cloud SQLからNeon PostgreSQLへ移行しました。README（2026年2月11日・12日更新）に合わせ、本番URLは [https://medicine-recommend-340042923793.asia-northeast1.run.app/](https://medicine-recommend-340042923793.asia-northeast1.run.app/) で、移行期間は**2日**とされています。この記事では、移行の背景、実装の詳細、そしてトラブルシューティングについて解説します。
 
 ## 移行の背景
 
+移行の最大の目的は**コスト削減**でした。Render 運用時は月あたり**約3,500円**の維持費がかかっており、レスポンスも速いとは言えませんでした。GCP Cloud Run および Neon PostgreSQL へ移行した結果、月あたり**数百円**程度に抑えられ、レスポンスも**おおむね70%程度の短縮**を実現できました。Docker の導入やコンテナ化は難易度の高い作業でしたが、無事完了し、Cloud SQL から Neon へのデータベース移行も問題なく完了しています。
+
 ### Renderでの課題
 
-- **コスト**: 月額固定費が高額
+- **コスト**: 月額約3,500円程度の維持費
+- **レスポンス**: 体感として十分に速いとは言い難い
 - **スケーラビリティ**: 手動スケーリングが必要
-- **データベース**: Cloud SQLのコストが高い
+- **データベース**: Cloud SQL のコストが負担
 
-### GCP Cloud Runの利点
+### GCP Cloud Run・Neon の利点
 
+- **コスト**: 従量課金により月あたり数百円レベルに削減
+- **レスポンス**: 体感でおおむね70%程度の短縮を達成
 - **従量課金**: リクエストがある時のみ課金
 - **自動スケーリング**: トラフィックに応じて自動スケール
 - **サーバーレス**: インフラ管理が不要

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
+import { CodeBlock } from "./CodeBlock";
 
 export const mdxComponents = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -15,14 +18,14 @@ export const mdxComponents = {
     <h4 className="mb-2 mt-4 text-lg font-semibold" {...props} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="mb-4 leading-7" {...props} />
+    <p className="mb-4 leading-7 break-words" {...props} />
   ),
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     const isExternal = props.href?.startsWith("http");
     return (
       <a
         {...props}
-        className="text-primary hover:underline"
+        className="text-primary hover:underline break-all"
         target={isExternal ? "_blank" : undefined}
         rel={isExternal ? "noopener noreferrer" : undefined}
       >
@@ -48,28 +51,55 @@ export const mdxComponents = {
       {...props}
     />
   ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => {
+  code: (props: React.HTMLAttributes<HTMLElement> & { className?: string; children?: React.ReactNode }) => {
+    // classNameがない場合はインラインコード
     const isInline = !props.className;
-    return isInline ? (
-      <code
-        className="rounded bg-muted px-1 py-0.5 text-sm"
-        {...props}
-      />
-    ) : (
-      <code {...props} />
-    );
+    const className = props.className || "";
+    const match = /language-(\w+)/.exec(className);
+    const language = match ? match[1] : "";
+    
+    // インラインコードまたは言語指定がない場合は通常のcodeタグ
+    if (isInline || !language) {
+      return (
+        <code
+          className="rounded bg-muted px-1 py-0.5 text-sm break-all"
+          {...props}
+        />
+      );
+    }
+
+    // コードブロックの場合、childrenからコード文字列を取得
+    let codeString = "";
+    const children = props.children;
+    
+    if (typeof children === "string") {
+      codeString = children;
+    } else if (Array.isArray(children)) {
+      codeString = children.map((c: any) => 
+        typeof c === "string" ? c : (c?.props?.children || String(c))
+      ).join("");
+    } else if (children && typeof children === "object") {
+      codeString = String((children as any)?.props?.children || children);
+    } else {
+      codeString = String(children || "");
+    }
+    
+    codeString = codeString.replace(/\n$/, "");
+
+    return <CodeBlock code={codeString} language={language} />;
   },
-  pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre
-      className="mb-4 overflow-x-auto rounded-lg bg-muted p-4"
-      {...props}
-    />
-  ),
+  pre: (props: React.HTMLAttributes<HTMLPreElement> & { children?: React.ReactNode }) => {
+    // next-mdx-remoteでは、コードブロックは通常codeコンポーネントで処理される
+    // preタグはそのまま返す（codeコンポーネントがCodeBlockを返す）
+    return <pre {...props} />;
+  },
   img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!props.src || typeof props.src !== "string") return null;
     const width = props.width;
     const isFullWidth = typeof width === "string" && width.endsWith("%");
-    if (isFullWidth) {
+    const isExternal = props.src.startsWith("http://") || props.src.startsWith("https://");
+    
+    if (isFullWidth || isExternal) {
       return (
         <span className="my-4 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -78,6 +108,7 @@ export const mdxComponents = {
             alt={props.alt || ""}
             className="rounded-lg w-full max-w-full"
             style={{ width: "100%", height: "auto" }}
+            loading="lazy"
           />
         </span>
       );
@@ -92,6 +123,7 @@ export const mdxComponents = {
           width={numWidth}
           height={numHeight}
           className="rounded-lg"
+          quality={85}
         />
       </span>
     );

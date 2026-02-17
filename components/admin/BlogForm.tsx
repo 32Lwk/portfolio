@@ -33,6 +33,8 @@ import {
   SquareCode,
   LayoutGrid,
   FileText,
+  Underline,
+  Palette,
 } from "lucide-react";
 
 const DEFAULT_DATE = new Date().toISOString().slice(0, 10);
@@ -143,6 +145,7 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
   const [content, setContent] = useState(initial?.content ?? "");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
   const [draft, setDraft] = useState(initial?.draft ?? false);
+  const [hidden, setHidden] = useState(initial?.hidden ?? false);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -161,6 +164,41 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
   const [editingContentImageIndex, setEditingContentImageIndex] = useState<number | null>(null);
   const [editImageWidth, setEditImageWidth] = useState("");
   const [editImageCaption, setEditImageCaption] = useState("");
+  const [colorDialogOpen, setColorDialogOpen] = useState(false);
+  const colorDialogRef = useRef<HTMLDivElement>(null);
+  
+  // プリセット色の定義
+  const presetColors = [
+    { name: "黒", value: "#000000" },
+    { name: "赤", value: "#ef4444" },
+    { name: "オレンジ", value: "#f97316" },
+    { name: "黄色", value: "#eab308" },
+    { name: "緑", value: "#22c55e" },
+    { name: "青", value: "#3b82f6" },
+    { name: "紫", value: "#a855f7" },
+    { name: "ピンク", value: "#ec4899" },
+    { name: "グレー", value: "#6b7280" },
+    { name: "茶色", value: "#a16207" },
+  ];
+
+  // 色選択ダイアログの外側クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (colorDialogRef.current && !colorDialogRef.current.contains(event.target as Node)) {
+        setColorDialogOpen(false);
+      }
+    };
+
+    if (colorDialogOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [colorDialogOpen]);
+  const [codeLanguageDialogOpen, setCodeLanguageDialogOpen] = useState(false);
+  const [selectedCodeLanguage, setSelectedCodeLanguage] = useState("");
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -205,6 +243,215 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
     }, 0);
   }, [content]);
 
+  // 太字用のトグル機能（**で囲む）
+  const insertBold = useCallback(() => {
+    const ta = contentRef.current;
+    if (!ta) {
+      setContent((c) => c + "****");
+      return;
+    }
+    
+    const currentValue = ta.value;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = currentValue.slice(start, end);
+    const marker = "**";
+    const markerLength = 2;
+    
+    if (selected.length > 0) {
+      // 選択範囲の前後を確認
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(end, Math.min(currentValue.length, end + markerLength));
+      
+      // 既に**で囲まれている場合、削除
+      if (beforeText === marker && afterText === marker) {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          selected + 
+          currentValue.slice(end + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, end - markerLength);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + marker + selected + marker + currentValue.slice(end);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, end + markerLength);
+      }, 0);
+    } else {
+      // カーソル位置の前後を確認
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(start, Math.min(currentValue.length, start + markerLength));
+      
+      if (beforeText === marker && afterText === marker) {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          currentValue.slice(start + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, start - markerLength);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + marker + marker + currentValue.slice(start);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, start + markerLength);
+      }, 0);
+    }
+  }, []);
+
+  // 斜体用のトグル機能（*で囲む、ただし**ではないことを確認）
+  const insertItalic = useCallback(() => {
+    const ta = contentRef.current;
+    if (!ta) {
+      setContent((c) => c + "**");
+      return;
+    }
+    
+    const currentValue = ta.value;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = currentValue.slice(start, end);
+    const marker = "*";
+    const markerLength = 1;
+    
+    if (selected.length > 0) {
+      // 選択範囲の前後を確認（**ではないことを確認）
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(end, Math.min(currentValue.length, end + markerLength));
+      const beforeTwo = currentValue.slice(Math.max(0, start - 2), start);
+      const afterTwo = currentValue.slice(end, Math.min(currentValue.length, end + 2));
+      
+      // **で囲まれている場合は太字なので、斜体は適用しない
+      if (beforeTwo === "**" && afterTwo === "**") {
+        // 太字の場合は何もしない、または太字を解除して斜体を適用
+        return;
+      }
+      
+      // 既に*で囲まれている場合（**ではない）、削除
+      if (beforeText === marker && afterText === marker && beforeTwo !== "**" && afterTwo !== "**") {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          selected + 
+          currentValue.slice(end + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, end - markerLength);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + marker + selected + marker + currentValue.slice(end);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, end + markerLength);
+      }, 0);
+    } else {
+      // カーソル位置の前後を確認
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(start, Math.min(currentValue.length, start + markerLength));
+      const beforeTwo = currentValue.slice(Math.max(0, start - 2), start);
+      const afterTwo = currentValue.slice(start, Math.min(currentValue.length, start + 2));
+      
+      if (beforeText === marker && afterText === marker && beforeTwo !== "**" && afterTwo !== "**") {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          currentValue.slice(start + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, start - markerLength);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + marker + marker + currentValue.slice(start);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, start + markerLength);
+      }, 0);
+    }
+  }, []);
+
+  // コード用のトグル機能（`で囲む）
+  const insertCode = useCallback(() => {
+    const ta = contentRef.current;
+    if (!ta) {
+      setContent((c) => c + "``");
+      return;
+    }
+    
+    const currentValue = ta.value;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = currentValue.slice(start, end);
+    const marker = "`";
+    const markerLength = 1;
+    
+    if (selected.length > 0) {
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(end, Math.min(currentValue.length, end + markerLength));
+      
+      if (beforeText === marker && afterText === marker) {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          selected + 
+          currentValue.slice(end + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, end - markerLength);
+        }, 0);
+        return;
+      }
+      
+      const newContent = currentValue.slice(0, start) + marker + selected + marker + currentValue.slice(end);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, end + markerLength);
+      }, 0);
+    } else {
+      const beforeText = currentValue.slice(Math.max(0, start - markerLength), start);
+      const afterText = currentValue.slice(start, Math.min(currentValue.length, start + markerLength));
+      
+      if (beforeText === marker && afterText === marker) {
+        const newContent = 
+          currentValue.slice(0, start - markerLength) + 
+          currentValue.slice(start + markerLength);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - markerLength, start - markerLength);
+        }, 0);
+        return;
+      }
+      
+      const newContent = currentValue.slice(0, start) + marker + marker + currentValue.slice(start);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + markerLength, start + markerLength);
+      }, 0);
+    }
+  }, []);
+
   const insertWrap = useCallback(
     (before: string, after: string) => {
       const ta = contentRef.current;
@@ -235,8 +482,188 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
   );
 
   const insertCodeBlock = useCallback(() => {
-    insertAtCursor("```\n\n```");
-  }, [insertAtCursor]);
+    const language = selectedCodeLanguage.trim();
+    if (language) {
+      insertAtCursor(`\`\`\`${language}\n\n\`\`\``);
+    } else {
+      insertAtCursor("```\n\n```");
+    }
+    setCodeLanguageDialogOpen(false);
+    setSelectedCodeLanguage("");
+  }, [insertAtCursor, selectedCodeLanguage]);
+
+  const insertColor = useCallback((color: string) => {
+    const ta = contentRef.current;
+    if (!ta) {
+      setContent((c) => c + `<span style="color: ${color}">テキスト</span>`);
+      setColorDialogOpen(false);
+      return;
+    }
+    
+    // textareaの現在の値を直接取得（状態のcontentではなく）
+    const currentValue = ta.value;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = currentValue.slice(start, end);
+    
+    // 選択範囲が既に色付きspanタグで囲まれているかチェック
+    if (selected.length > 0) {
+      // 選択範囲の前後を確認して、既にspanタグで囲まれているかチェック
+      const beforeStart = Math.max(0, start - 200); // 前200文字を確認
+      const afterEnd = Math.min(currentValue.length, end + 200); // 後200文字を確認
+      const contextBefore = currentValue.slice(beforeStart, start);
+      const contextAfter = currentValue.slice(end, afterEnd);
+      
+      // <span style="color: で始まり、">で終わるパターンを検索
+      const spanStartMatch = contextBefore.match(/<span\s+style="color:\s*[^"]+;\s*font-size:\s*inherit;">\s*$/);
+      const spanEndMatch = contextAfter.match(/^\s*<\/span>/);
+      
+      // 既に色付きspanタグで囲まれている場合、タグを削除
+      if (spanStartMatch && spanEndMatch) {
+        const tagStartPos = start - spanStartMatch[0].length;
+        const tagEndPos = end + spanEndMatch[0].length;
+        const newContent = 
+          currentValue.slice(0, tagStartPos) + 
+          selected + 
+          currentValue.slice(tagEndPos);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(tagStartPos, tagStartPos + selected.length);
+        }, 0);
+        setColorDialogOpen(false);
+        return;
+      }
+      
+      // 通常の挿入
+      const before = currentValue.slice(0, start);
+      const after = currentValue.slice(end);
+      const newContent = before + `<span style="color: ${color}; font-size: inherit;">${selected}</span>` + after;
+      
+      setContent(newContent);
+      
+      setTimeout(() => {
+        ta.focus();
+        const newPosition = start + `<span style="color: ${color}; font-size: inherit;">${selected}</span>`.length;
+        ta.setSelectionRange(newPosition, newPosition);
+      }, 0);
+    } else {
+      // カーソル位置が色付きspanタグの中にあるかチェック
+      const beforeStart = Math.max(0, start - 300);
+      const afterEnd = Math.min(currentValue.length, start + 300);
+      const context = currentValue.slice(beforeStart, afterEnd);
+      const cursorInContext = start - beforeStart;
+      
+      // カーソル位置の前後でspanタグを検索
+      const beforeSpan = context.slice(0, cursorInContext);
+      const afterSpan = context.slice(cursorInContext);
+      
+      const lastSpanStart = beforeSpan.lastIndexOf('<span style="color:');
+      const firstSpanEnd = afterSpan.indexOf('</span>');
+      
+      if (lastSpanStart !== -1 && firstSpanEnd !== -1) {
+        // カーソルがspanタグの中にある場合、タグを削除
+        const spanStartPos = beforeStart + lastSpanStart;
+        const spanEndPos = start + firstSpanEnd + '</span>'.length;
+        const spanContent = currentValue.slice(spanStartPos, spanEndPos);
+        const textContent = spanContent.replace(/<span[^>]*>/, '').replace(/<\/span>/, '');
+        
+        const newContent = 
+          currentValue.slice(0, spanStartPos) + 
+          textContent + 
+          currentValue.slice(spanEndPos);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          const newPos = spanStartPos + textContent.length;
+          ta.setSelectionRange(newPos, newPos);
+        }, 0);
+        setColorDialogOpen(false);
+        return;
+      }
+      
+      // 通常の挿入
+      const before = currentValue.slice(0, start);
+      const after = currentValue.slice(end);
+      const placeholder = `<span style="color: ${color}; font-size: inherit;">テキスト</span>`;
+      const newContent = before + placeholder + after;
+      
+      setContent(newContent);
+      
+      setTimeout(() => {
+        ta.focus();
+        const tagStart = start + `<span style="color: ${color}; font-size: inherit;">`.length;
+        const textEnd = tagStart + "テキスト".length;
+        ta.setSelectionRange(tagStart, textEnd);
+      }, 0);
+    }
+    setColorDialogOpen(false);
+  }, []);
+
+  // 下線のトグル機能付き挿入
+  const insertUnderline = useCallback(() => {
+    const ta = contentRef.current;
+    if (!ta) {
+      setContent((c) => c + "<u></u>");
+      return;
+    }
+    
+    const currentValue = ta.value;
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const selected = currentValue.slice(start, end);
+    
+    if (selected.length > 0) {
+      // 選択範囲が既に<u>タグで囲まれているかチェック
+      const beforeText = currentValue.slice(Math.max(0, start - 3), start);
+      const afterText = currentValue.slice(end, Math.min(currentValue.length, end + 4));
+      
+      if (beforeText === "<u>" && afterText === "</u>") {
+        // タグを削除
+        const newContent = 
+          currentValue.slice(0, start - 3) + 
+          selected + 
+          currentValue.slice(end + 4);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - 3, end - 3);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + "<u>" + selected + "</u>" + currentValue.slice(end);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + 3, end + 3);
+      }, 0);
+    } else {
+      // カーソル位置が<u></u>の間にある場合
+      const beforeText = currentValue.slice(Math.max(0, start - 3), start);
+      const afterText = currentValue.slice(start, Math.min(currentValue.length, start + 4));
+      
+      if (beforeText === "<u>" && afterText === "</u>") {
+        // タグを削除
+        const newContent = currentValue.slice(0, start - 3) + currentValue.slice(start + 4);
+        setContent(newContent);
+        setTimeout(() => {
+          ta.focus();
+          ta.setSelectionRange(start - 3, start - 3);
+        }, 0);
+        return;
+      }
+      
+      // 通常の挿入
+      const newContent = currentValue.slice(0, start) + "<u></u>" + currentValue.slice(start);
+      setContent(newContent);
+      setTimeout(() => {
+        ta.focus();
+        ta.setSelectionRange(start + 3, start + 3);
+      }, 0);
+    }
+  }, []);
 
   const insertLink = useCallback(() => {
     const text = linkText.trim() || "リンク";
@@ -259,6 +686,45 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
     setTags((prev) => prev.filter((x) => x !== tag));
   };
 
+  const checkImageExists = async (imagePath: string): Promise<boolean> => {
+    if (!imagePath || imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return true; // 外部URLはスキップ
+    }
+    try {
+      const res = await fetch("/api/admin/check-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagePath }),
+      });
+      const data = await res.json();
+      return data.exists === true;
+    } catch {
+      return false;
+    }
+  };
+
+  const extractImagePathsFromMarkdown = (markdown: string): string[] => {
+    const imagePaths: string[] = [];
+    // Markdown形式の画像: ![alt](path)
+    const markdownImageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    let match;
+    while ((match = markdownImageRegex.exec(markdown)) !== null) {
+      const path = match[2].trim();
+      if (path && !path.startsWith("http://") && !path.startsWith("https://")) {
+        imagePaths.push(path);
+      }
+    }
+    // HTML形式の画像: <img src="path">
+    const htmlImageRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    while ((match = htmlImageRegex.exec(markdown)) !== null) {
+      const path = match[1].trim();
+      if (path && !path.startsWith("http://") && !path.startsWith("https://")) {
+        imagePaths.push(path);
+      }
+    }
+    return [...new Set(imagePaths)]; // 重複を削除
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -270,6 +736,22 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
     }
     setSaving(true);
     try {
+      // コンテンツ内の画像の存在確認
+      const imagePaths = extractImagePathsFromMarkdown(content);
+      const missingImages: string[] = [];
+
+      for (const imagePath of imagePaths) {
+        if (!(await checkImageExists(imagePath))) {
+          missingImages.push(imagePath);
+        }
+      }
+
+      if (missingImages.length > 0) {
+        throw new Error(
+          `以下の画像ファイルが見つかりません:\n\n${missingImages.join("\n")}\n\n画像をアップロードするか、正しいパスを入力してください。`
+        );
+      }
+
       const res = await fetch("/api/admin/save-blog", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -283,6 +765,7 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
           content,
           featured,
           draft,
+          hidden,
           oldSlug: oldSlug || undefined,
         }),
       });
@@ -511,7 +994,7 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
             <SelectTrigger className="w-[200px]">
               <SelectValue placeholder="既存タグを選択" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[300px]">
               <SelectItem value="__placeholder__" disabled>
                 既存タグを選択
               </SelectItem>
@@ -552,7 +1035,7 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-2">
           <Checkbox
             id="featured"
@@ -568,6 +1051,14 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
             onCheckedChange={(c) => setDraft(c === true)}
           />
           <Label htmlFor="draft">下書き</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="hidden"
+            checked={hidden}
+            onCheckedChange={(c) => setHidden(c === true)}
+          />
+          <Label htmlFor="hidden">非表示（公開ページに表示されません）</Label>
         </div>
       </div>
 
@@ -604,15 +1095,71 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
 
         {/* ツールバー */}
         <div className="flex flex-wrap items-center gap-1 rounded-md border border-input bg-muted/30 p-2">
-          <Button type="button" variant="ghost" size="sm" onClick={() => insertWrap("**", "**")} title="太字">
+          <Button type="button" variant="ghost" size="sm" onClick={insertBold} title="太字">
             <Bold className="h-4 w-4" />
           </Button>
-          <Button type="button" variant="ghost" size="sm" onClick={() => insertWrap("*", "*")} title="斜体">
+          <Button type="button" variant="ghost" size="sm" onClick={insertItalic} title="斜体">
             <Italic className="h-4 w-4" />
           </Button>
-          <Button type="button" variant="ghost" size="sm" onClick={() => insertWrap("`", "`")} title="コード">
+          <Button type="button" variant="ghost" size="sm" onClick={insertCode} title="コード">
             <Code className="h-4 w-4" />
           </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={insertUnderline} title="下線">
+            <Underline className="h-4 w-4" />
+          </Button>
+          <div className="relative" ref={colorDialogRef}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setColorDialogOpen(!colorDialogOpen)}
+              title="文字色を変更"
+              className={colorDialogOpen ? "bg-muted" : ""}
+            >
+              <Palette className="h-4 w-4 mr-1" />
+              <span className="text-xs">色</span>
+            </Button>
+            {colorDialogOpen && (
+              <div className="absolute top-full left-0 mt-1 z-50 rounded-md border border-input bg-background shadow-lg p-3 min-w-[240px]">
+                <div className="mb-3">
+                  <Label className="text-sm font-medium">文字色を選択</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    テキストを選択してから色を選んでください
+                  </p>
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {presetColors.map((color) => (
+                    <button
+                      key={color.value}
+                      type="button"
+                      onClick={() => {
+                        insertColor(color.value);
+                      }}
+                      className="flex flex-col items-center gap-1.5 p-2 rounded-md hover:bg-muted transition-colors border border-transparent hover:border-border"
+                      title={color.name}
+                    >
+                      <div
+                        className="w-10 h-10 rounded-md border-2 border-border shadow-sm"
+                        style={{ backgroundColor: color.value }}
+                      />
+                      <span className="text-[10px] font-medium text-foreground">{color.name}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="w-full text-xs"
+                    onClick={() => setColorDialogOpen(false)}
+                  >
+                    閉じる
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
           <span className="w-px h-5 bg-border mx-0.5" aria-hidden />
           <Button type="button" variant="ghost" size="sm" onClick={() => insertAtCursor("## ")} title="見出し2">
             <Heading2 className="h-4 w-4" />
@@ -672,10 +1219,49 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
           ) : (
             <span className="text-xs text-muted-foreground px-2">スラッグ入力で画像挿入可</span>
           )}
-          <Button type="button" variant="ghost" size="sm" onClick={insertCodeBlock} title="コードブロック">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setCodeLanguageDialogOpen(true)}
+            title="コードブロック"
+          >
             <SquareCode className="h-4 w-4" />
           </Button>
         </div>
+
+        {/* コードブロック言語選択ダイアログ */}
+        {codeLanguageDialogOpen && (
+          <div className="flex flex-wrap items-center gap-2 rounded-md border border-input bg-background p-2">
+            <Label className="text-xs">言語（任意）:</Label>
+            <Input
+              placeholder="例: typescript, javascript, python"
+              value={selectedCodeLanguage}
+              onChange={(e) => setSelectedCodeLanguage(e.target.value)}
+              className="w-48 h-8 text-sm"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  insertCodeBlock();
+                }
+              }}
+            />
+            <Button type="button" size="sm" onClick={insertCodeBlock}>
+              挿入
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setCodeLanguageDialogOpen(false);
+                setSelectedCodeLanguage("");
+              }}
+            >
+              キャンセル
+            </Button>
+          </div>
+        )}
 
         {/* リンク挿入ダイアログ（ツールバー直下） */}
         {linkDialogOpen && (
@@ -700,6 +1286,7 @@ export function BlogForm({ initial, oldSlug, existingTags = [], existingSlugs = 
             </Button>
           </div>
         )}
+
 
         {/* 画像オプション（サイズ・注記）ダイアログ */}
         {imageOptionsOpen && (

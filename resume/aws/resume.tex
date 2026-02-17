@@ -1,0 +1,118 @@
+% Yuto Kawashima — Resume (AWS Professional Services Intern)
+% ! Build:  xelatex -jobname=Resume_Yuto_Kawashima_AWS resume.tex
+%   (do NOT use pdflatex — fontspec requires XeLaTeX/LuaLaTeX)
+
+\documentclass[10pt,letterpaper]{article}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setmainfont{Times New Roman}
+\setCJKmainfont{Yu Mincho}[Scale=0.95]
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\geometry{margin=0.65in}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlist{leftmargin=*, nosep, itemsep=0.1pt}
+\titlespacing*{\section}{0pt}{3pt}{1pt}
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection}{0.5em}{}[\titlerule]
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue,
+  linkcolor=black,
+  pdftitle={Yuto Kawashima - Resume (AWS)},
+  pdfauthor={Yuto Kawashima}
+}
+
+% ---------------------------------------------------------------------------
+\begin{document}
+
+% ---- Contact ----
+\begin{center}
+  {\LARGE \textbf{Yuto Kawashima}}\\[1pt]
+  \href{mailto:yuto.k_1028@icloud.com}{yuto.k\_1028@icloud.com}
+  \quad $|$ \quad
+  \href{https://github.com/32Lwk}{github.com/32Lwk}
+  \quad $|$ \quad
+  \href{https://www.linkedin.com/in/kawashimayuto/}{linkedin.com/in/kawashimayuto}
+  \quad $|$ \quad
+  \href{https://www.yutok.dev/}{yutok.dev}
+\end{center}
+\vspace{0pt}
+
+% ---- Objective & Statement of Purpose (AWS-focused, condensed) ----
+\section*{Objective}
+Seeking a cloud engineering role where I can design and deliver scalable, reliable cloud architectures by bridging customer business requirements and technical solutions, with a strong interest in AWS Professional Services.
+
+\vspace{0.5pt}
+
+\section*{Statement of Purpose}
+I am applying to AWS Professional Services because I want to bridge cloud technology and real-world business challenges. My experience operating production systems on GCP (Cloud Run, Neon PostgreSQL) has shown me that successful cloud solutions require understanding customer needs and designing architectures that scale reliably. I developed a cloud-based medicine consultation tool, migrating from Render to GCP and optimizing for cost and scale-to-zero—achieving significant performance improvements and cost reduction. Through AWS Free Tier hands-on practice, I have gained foundational knowledge of AWS services (EC2, S3, IAM, VPC, CloudWatch) and network fundamentals. I am learning infrastructure as code concepts (Terraform, CloudFormation) and have experience with CI/CD pipelines and security best practices (Security Connect 2026 participant). During this internship, I hope to contribute by applying analytical and problem-solving skills to real customer projects, while developing technical documentation and presentation skills essential for AWS Professional Services engagements.
+
+\vspace{0.5pt}
+
+% ---- Education ----
+\section*{Education}
+\textbf{Nagoya University} \hfill Expected Graduation: Mar 2028\\
+Faculty of Science, Department of Physics \quad $|$ \quad GPA: 3.22 / 4.0
+
+\vspace{0.5pt}
+
+% ---- Experience ----
+\section*{Experience}
+\textbf{Registered Sales Clerk (licensed to sell OTC pharmaceuticals in Japan)} \hfill Apr 2024 -- Present\\
+\textit{Matsumotokiyoshi Co., Ltd.}
+\begin{itemize}
+  \item Provide tailored OTC medicine recommendations and explain product information in accessible language.
+  \item Explained technical and product information clearly to diverse customers; experience later applied to presenting technical solutions and creating documentation (README, API specs, architecture designs).
+\end{itemize}
+
+\vspace{0.5pt}
+
+% ---- Projects ----
+\section*{Projects}
+\textbf{Chat-based OTC Medicine Consultation Tool (Beta)} \quad
+\href{https://github.com/32Lwk/medicine-recommend-system}{GitHub} $|$
+\href{https://medicine-recommend-340042923793.asia-northeast1.run.app/}{Demo}
+\begin{itemize}
+  \item Developed cloud-based chat app using hybrid rule-based + LLM engine; full ownership from requirements to operation. Migrated from Render to GCP Cloud Run and Cloud SQL to Neon PostgreSQL; achieved significant performance improvements and cost reduction.
+  \item Tech: Python, Flask, PostgreSQL, GCP Cloud Run, Docker, CI/CD (GitHub Actions). Implemented security best practices, multi-language, and accessibility support. Applied agile-style iterative development with GitHub Issues for task management.
+\end{itemize}
+
+\textbf{AWS Hands-on Projects} \hfill 2024 -- Present
+\begin{itemize}
+  \item Designed and deployed basic web architectures on EC2 (Amazon Linux), configuring security groups and implementing VPC/subnet structures with routing and network isolation.
+  \item Implemented static website hosting using S3 with bucket policies and public access configuration.
+  \item Configured IAM users, roles, and policies following least-privilege principles.
+  \item Monitored application performance using CloudWatch logs and metrics.
+\end{itemize}
+
+\textbf{Awards \& Competitions}
+\begin{itemize}
+  \item AWS Digital Society Tour 2025 Nagoya — \textbf{Finalist} (Aug 2025)
+  \item Yumekatari Student-Generated AI Contest: Development, Individual — \textbf{Grand Prize} (Nov 2025)
+  \item Sugiyama Jogakuen University — 13th Business Plan Competition — \textbf{Excellence Award} (Dec 2025)
+  \item Career Gateway 2025 Idea Competition (doda) — \textbf{Judge's Special Award} (Jan 2026)
+\end{itemize}
+
+\vspace{0.5pt}
+
+% ---- Skills ----
+\section*{Skills}
+\textbf{Languages:} Python, JavaScript, TypeScript, Rust, C\\
+\textbf{Cloud \& DevOps:} GCP (Cloud Run), AWS (EC2, S3, IAM, VPC, CloudWatch), Docker, IaC (Learning: Terraform, CloudFormation), CI/CD (GitHub Actions), PostgreSQL, Linux, Git\\
+\textbf{Networking \& Security:} TCP/IP, DNS, HTTP/HTTPS, Load Balancing, AWS VPC, Subnets, Security Groups, Basic understanding of routing and network isolation, OWASP Top 10, Security Connect 2026\\
+\textbf{Methodologies:} SDLC, Agile-style iterative development, Task management with GitHub Issues
+
+\vspace{0.5pt}
+
+% ---- Certifications \& Languages ----
+\section*{Certifications \& Languages}
+Fundamental Information Technology Engineer Examination (Japan) \quad $|$ \quad
+Registered Sales Clerk \quad $|$ \quad AWS Certified Cloud Practitioner (In Progress)\\
+Japanese (Native) \quad $|$ \quad English: Intermediate
+
+\end{document}

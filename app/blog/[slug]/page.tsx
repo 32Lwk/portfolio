@@ -94,9 +94,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <TocProvider>
           <TocMobileButton />
-          <div className="flex gap-8">
+          <div className="flex flex-col lg:flex-row gap-8">
             <TableOfContents />
-            <article className="flex-1">
+            <article className="flex-1 min-w-0">
               <header className="mb-8">
                 <div className="mb-4 flex flex-wrap items-center gap-2">
               <Badge variant="secondary">{post.category}</Badge>
@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {format(new Date(post.date), "yyyy年MM月dd日", { locale: ja })}
               </time>
             </div>
-            <h1 className="text-4xl font-bold">{post.title}</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold break-words">{post.title}</h1>
             {post.description && (
               <p className="mt-4 text-lg text-muted-foreground">
                 {post.description}
@@ -123,7 +123,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <ShareButtons title={post.title} url={postUrl} />
                 </div>
               </header>
-          <div className="prose prose-slate dark:prose-invert max-w-none">
+          <div className="prose prose-slate dark:prose-invert max-w-none break-words">
             <MDXRemote
               source={post.content}
               components={mdxComponents}

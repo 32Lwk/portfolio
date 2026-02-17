@@ -7,6 +7,12 @@ export { BLOG_CATEGORIES, type BlogCategory } from "./blog-constants";
 
 const postsDirectory = path.join(process.cwd(), "content/blog");
 
+/**
+ * ブログの slug は「ファイル名から .md を除いた文字列」です。
+ * 例: content/blog/medicine-recommend-physics-perspective.md → slug = "medicine-recommend-physics-perspective"
+ * 記事URL: /blog/{slug} （例: /blog/medicine-recommend-physics-perspective）
+ * フロントマターの slug は参照しておらず、ファイル名のみで決まります。
+ */
 export interface BlogPost {
   slug: string;
   title: string;
@@ -17,6 +23,7 @@ export interface BlogPost {
   author: string;
   featured?: boolean;
   draft?: boolean;
+  hidden?: boolean;
   content: string;
 }
 
@@ -48,12 +55,13 @@ export function getAllPosts(): BlogPost[] {
         author: data.author || "川嶋宥翔",
         featured: data.featured || false,
         draft: data.draft ?? false,
+        hidden: data.hidden ?? false,
         content,
       } as BlogPost;
     });
 
   const sorted = allPostsData
-    .filter((post) => !post.draft)
+    .filter((post) => !post.draft && !post.hidden)
     .sort((a, b) => {
       if (a.date < b.date) return 1;
       return -1;
@@ -90,6 +98,7 @@ export function getAllPostsForAdmin(): BlogPost[] {
         author: data.author || "川嶋宥翔",
         featured: data.featured || false,
         draft: data.draft ?? false,
+        hidden: data.hidden ?? false,
         content,
       } as BlogPost;
     });
@@ -141,7 +150,8 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
       : "技術";
 
     const draft = data.draft ?? false;
-    if (draft) return undefined;
+    const hidden = data.hidden ?? false;
+    if (draft || hidden) return undefined;
 
     return {
       slug,
@@ -153,6 +163,7 @@ export function getPostBySlug(slug: string): BlogPost | undefined {
       author: data.author || "川嶋宥翔",
       featured: data.featured || false,
       draft,
+      hidden,
       content,
     } as BlogPost;
   } catch (error) {
@@ -184,6 +195,7 @@ export function getPostBySlugForAdmin(slug: string): BlogPost | undefined {
       author: data.author || "川嶋宥翔",
       featured: data.featured || false,
       draft: data.draft ?? false,
+      hidden: data.hidden ?? false,
       content,
     } as BlogPost;
   } catch (error) {

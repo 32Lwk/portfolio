@@ -234,6 +234,9 @@
 /* Prose styles for blog content */
 .prose {
   @apply text-foreground;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .prose h1,
@@ -241,30 +244,41 @@
 .prose h3,
 .prose h4 {
   @apply text-foreground font-bold;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .prose h1 {
-  @apply text-3xl mt-8 mb-4;
+  @apply text-2xl sm:text-3xl mt-8 mb-4;
 }
 
 .prose h2 {
-  @apply text-2xl mt-6 mb-3;
+  @apply text-xl sm:text-2xl mt-6 mb-3;
 }
 
 .prose h3 {
-  @apply text-xl mt-4 mb-2;
+  @apply text-lg sm:text-xl mt-4 mb-2;
 }
 
 .prose p {
   @apply mb-4 leading-7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .prose a {
   @apply text-primary hover:underline;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .prose code {
   @apply bg-muted px-1 py-0.5 rounded text-sm;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .prose pre {
@@ -278,14 +292,22 @@
 .prose ul,
 .prose ol {
   @apply mb-4 ml-6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .prose li {
   @apply mb-2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .prose blockquote {
   @apply border-l-4 border-primary pl-4 italic my-4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .prose img {

@@ -1,11 +1,17 @@
 ---
-title: "マルチインスタンス対応の実装 - PostgreSQLベースのセッション管理システム"
-description: "Render Manual Scaling対応のため、PostgreSQLベースのセッション管理システムを実装し、複数インスタンス間でセッションデータを共有する機能について"
-date: "2025-11-05"
-category: "プロジェクト"
-tags: ["医薬品相談ツール", "PostgreSQL", "パフォーマンス"]
-author: "川嶋宥翔"
+title: マルチインスタンス対応の実装 - PostgreSQLベースのセッション管理システム
+description: >-
+  Render Manual
+  Scaling対応のため、PostgreSQLベースのセッション管理システムを実装し、複数インスタンス間でセッションデータを共有する機能について
+date: '2025-11-05'
+category: プロジェクト
+tags:
+  - 医薬品相談ツール
+  - PostgreSQL
+  - パフォーマンス
+author: 川嶋宥翔
 featured: false
+hidden: false
 ---
 
 # マルチインスタンス対応の実装 - PostgreSQLベースのセッション管理システム
@@ -16,234 +22,103 @@ Render Manual Scaling対応のため、PostgreSQLベースのセッション管�
 
 ### Render Manual Scalingの課題
 
-Render Manual Scalingを使用する場合、複数のインスタンスが起動します。しかし、Flaskのデフォルトのセッション管理（メモリベース）では、**インスタンス間でセッションデータが共有されない**という問題がありました。
+[medicine-recommend-system](https://github.com/32Lwk/medicine-recommend-system) では、Render Manual Scalingを使用する場合に複数のインスタンスが起動します。しかし、Flaskのデフォルトのセッション管理（メモリベース）では、**インスタンス間でセッションデータが共有されない**という問題がありました。同じユーザーが別リクエストで別インスタンスに振られると、会話履歴やユーザー属性が引き継がれず、体験が分断されます。
 
 ### 解決のアプローチ
 
-PostgreSQLベースのセッション管理システムを実装し、複数インスタンス間でセッションデータを共有できるようにしました。
+PostgreSQLベースのセッション管理システムを実装し、複数インスタンス間でセッションデータを共有できるようにしました。READMEでは、**2〜3台のインスタンスで同時接続15台に対応**できる構成として言及されています。
 
-## 実装の詳細
+## 実装の詳細（GitHub 本番ブランチとの対応）
 
-### 1. セッションテーブルの作成
+現在の [medicine-recommend-system](https://github.com/32Lwk/medicine-recommend-system) では、セッションとグローバル状態は **`src/services/database.py`**（DatabaseManager）と **`src/services/session_manager.py`** で扱っています。テーブル作成は起動時の `initialize_tables()` で行われます。
+
+### 1. セッション・グローバル状態テーブル（database.py）
 
 ```python
-# src/services/database.py
-def create_session_table():
-    """
-    セッションテーブルを作成
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS sessions (
-            session_id VARCHAR(255) PRIMARY KEY,
-            username VARCHAR(255),
-            messages JSONB,
-            last_activity TIMESTAMP,
-            client_ip VARCHAR(45),
-            user_agent TEXT,
-            user_attributes JSONB,
-            session_active BOOLEAN DEFAULT TRUE,
-            crisis_detected BOOLEAN DEFAULT FALSE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    
-    # インデックスの作成
-    cursor.execute("""
-        CREATE INDEX IF NOT EXISTS idx_sessions_last_activity 
-        ON sessions(last_activity)
-    """)
-    
-    cursor.execute("""
-        CREATE INDEX IF NOT EXISTS idx_sessions_active 
-        ON sessions(session_active) 
-        WHERE session_active = TRUE
-    """)
-    
-    conn.commit()
-    cursor.close()
-    return_connection(conn)
+# src/services/database.py の initialize_tables() より抜粋
+create_sessions_table_sql = """
+CREATE TABLE IF NOT EXISTS sessions (
+    session_id VARCHAR(255) PRIMARY KEY,
+    username VARCHAR(255),
+    messages JSONB,
+    user_attributes JSONB,
+    last_activity TIMESTAMP NOT NULL,
+    client_ip VARCHAR(255),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    session_active BOOLEAN DEFAULT TRUE
+);
+"""
+
+create_global_state_table_sql = """
+CREATE TABLE IF NOT EXISTS global_state (
+    key VARCHAR(255) PRIMARY KEY,
+    value JSONB NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
 ```
 
-### 2. セッションの保存と取得
+インデックスは `idx_sessions_last_activity`、`idx_global_state_updated_at` などが定義されています。
+
+### 2. セッションの保存と取得（session_manager.py → database.py）
+
+アプリからは **`session_manager`** の API を利用します。内部で `get_database()` により DatabaseManager を取得し、`db.save_session` / `db.get_session` を呼びます。
 
 ```python
 # src/services/session_manager.py
-def save_session_to_db(session_id, session_data):
-    """
-    セッションをデータベースに保存
-    
-    Args:
-        session_id: セッションID
-        session_data: セッションデータ
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute("""
-            INSERT INTO sessions (
-                session_id, username, messages, last_activity,
-                client_ip, user_agent, user_attributes, session_active,
-                crisis_detected, updated_at
-            ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP
-            )
-            ON CONFLICT (session_id) 
-            DO UPDATE SET
-                username = EXCLUDED.username,
-                messages = EXCLUDED.messages,
-                last_activity = EXCLUDED.last_activity,
-                client_ip = EXCLUDED.client_ip,
-                user_agent = EXCLUDED.user_agent,
-                user_attributes = EXCLUDED.user_attributes,
-                session_active = EXCLUDED.session_active,
-                crisis_detected = EXCLUDED.crisis_detected,
-                updated_at = CURRENT_TIMESTAMP
-        """, (
-            session_id,
-            session_data.get('username'),
-            json.dumps(session_data.get('messages', [])),
-            session_data.get('last_activity'),
-            session_data.get('client_ip'),
-            session_data.get('user_agent'),
-            json.dumps(session_data.get('user_attributes', {})),
-            session_data.get('session_active', True),
-            session_data.get('crisis_detected', False)
-        ))
-        
-        conn.commit()
-    except Exception as e:
-        logger.error(f"セッション保存エラー: {e}")
-        conn.rollback()
-    finally:
-        cursor.close()
-        return_connection(conn)
-
 def get_session_from_db(session_id):
-    """
-    データベースからセッションを取得
-    
-    Args:
-        session_id: セッションID
-    
-    Returns:
-        session_data: セッションデータ（存在しない場合はNone）
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute("""
-            SELECT 
-                session_id, username, messages, last_activity,
-                client_ip, user_agent, user_attributes, session_active,
-                crisis_detected
-            FROM sessions
-            WHERE session_id = %s AND session_active = TRUE
-        """, (session_id,))
-        
-        row = cursor.fetchone()
-        if row:
-            return {
-                'session_id': row[0],
-                'username': row[1],
-                'messages': json.loads(row[2]) if row[2] else [],
-                'last_activity': row[3],
-                'client_ip': row[4],
-                'user_agent': row[5],
-                'user_attributes': json.loads(row[6]) if row[6] else {},
-                'session_active': row[7],
-                'crisis_detected': row[8]
-            }
-        return None
-    except Exception as e:
-        logger.error(f"セッション取得エラー: {e}")
-        return None
-    finally:
-        cursor.close()
-        return_connection(conn)
+    """セッションをDBから取得、失敗時はメモリフォールバック"""
+    db = get_database()
+    if db and (db.connection or db.connection_pool):
+        session_data = db.get_session(session_id)
+        if session_data:
+            return session_data
+    return _all_sessions.get(session_id)
+
+def save_session_to_db(session_id, data):
+    """セッションをDBに保存、失敗時はメモリに保存"""
+    db = get_database()
+    if db and (db.connection or db.connection_pool):
+        success = db.save_session(session_id, data)
+        if success:
+            return True
+    _all_sessions[session_id] = data
+    logger.warning(f"DB save failed, using memory fallback for session {session_id}")
+    return True
 ```
 
-### 3. グローバル状態の同期
+### 3. グローバル状態の同期（global_state テーブル）
 
-AI_AUTO_REPLY、ADMIN_MODE、MANUAL_REPLY_QUEUEをDBで管理：
+**AI_AUTO_REPLY**・**ADMIN_MODE**・**MANUAL_REPLY_QUEUE**・**MANUAL_REPLY_MESSAGE** は、`global_state` テーブルの key/value（JSONB）で管理されています。`session_manager` からは次のように取得・設定します。
 
 ```python
 # src/services/session_manager.py
 def get_manual_reply_queue():
-    """
-    手動返信キューを取得（DBから）
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute("""
-            SELECT queue_data FROM global_state 
-            WHERE key = 'manual_reply_queue'
-        """)
-        
-        row = cursor.fetchone()
-        if row:
-            return json.loads(row[0])
-        return []
-    except Exception as e:
-        logger.error(f"キュー取得エラー: {e}")
-        return []
-    finally:
-        cursor.close()
-        return_connection(conn)
+    """手動返信キューをDBから取得"""
+    db = get_database()
+    if db and (db.connection or db.connection_pool):
+        return db.get_global_state('MANUAL_REPLY_QUEUE', default_value=[])
+    return _manual_reply_queue
 
-def set_manual_reply_queue(queue):
-    """
-    手動返信キューを設定（DBに保存）
-    """
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute("""
-            INSERT INTO global_state (key, queue_data, updated_at)
-            VALUES ('manual_reply_queue', %s, CURRENT_TIMESTAMP)
-            ON CONFLICT (key) 
-            DO UPDATE SET
-                queue_data = EXCLUDED.queue_data,
-                updated_at = CURRENT_TIMESTAMP
-        """, (json.dumps(queue),))
-        
-        conn.commit()
-    except Exception as e:
-        logger.error(f"キュー設定エラー: {e}")
-        conn.rollback()
-    finally:
-        cursor.close()
-        return_connection(conn)
+def set_manual_reply_queue(value):
+    """手動返信キューをDBに保存"""
+    global _manual_reply_queue
+    db = get_database()
+    if db and (db.connection or db.connection_pool):
+        db.set_global_state('MANUAL_REPLY_QUEUE', value)
+    _manual_reply_queue = value
 ```
 
 ### 4. 自動フォールバック
 
-DB接続失敗時はメモリベースの動作にフォールバック：
+DB 接続が利用できない場合は、モジュール変数 `_all_sessions` や `_manual_reply_queue` などにフォールバックし、単一インスタンスとして動作し続ける設計です。
 
-```python
-def get_session_with_fallback(session_id):
-    """
-    セッションを取得（DB失敗時はメモリベースにフォールバック）
-    """
-    try:
-        # DBから取得を試みる
-        session_data = get_session_from_db(session_id)
-        if session_data:
-            return session_data
-    except Exception as e:
-        logger.warning(f"DB接続失敗、メモリベースにフォールバック: {e}")
-    
-    # メモリベースのセッションを返す
-    return flask_session.get(session_id)
-```
+## 運用で気づいたこと（README・本番環境に基づく）
+
+- **フォールバックの動作**: DB接続失敗時は `session_manager` 内でメモリフォールバックし、`logger.warning("DB save failed, using memory fallback for session ...")` がログに出力されます。本番ではDB（Neon PostgreSQL）を利用しているため、接続が一時的に不安定になった場合にのみフォールバックが発生し得ます。ログでフォールバックの有無を確認し、Neonの接続制限やネットワークを確認する運用にしています。
+- **Render Manual Scaling 時**: 2026年2月にGCP Cloud Runへ移行する前は、Render で2〜3台のインスタンスを立てた構成で、PostgreSQL（当時はCloud SQL）にセッションとグローバル状態を置くことで、同一ユーザーが別インスタンスに振られても会話履歴や手動返信キューが引き継がれることを確認しました。インスタンス間でセッションが分断される事象は、DB共有の導入後に解消しています。
+- **Cloud Run 移行後**: 2026年2月に [GCP Cloud Run・Neon PostgreSQL へ移行](/blog/medicine-recommend-cloud-migration)した後も、セッションとグローバル状態をDBに置く設計はそのまま活きており、Cloud Run のインスタンスのスケールや複数コンテナ稼働時も一貫した動作を保つ基盤になっています。
 
 ## 開発を通じて学んだこと
 
@@ -303,10 +178,21 @@ DB接続失敗時は、メモリベースの動作にフォールバックする
 - 楽観的ロックの実装
 - タイムスタンプによる更新時刻の管理
 
+## 本番環境での位置づけ（READMEとの対応）
+
+リポジトリのREADMEでは、マルチインスタンス対応は次のように整理されています。
+
+- **PostgreSQLベースのセッション管理**: 複数インスタンス間でセッションデータを共有
+- **グローバル状態の同期**: AI_AUTO_REPLY、ADMIN_MODE、MANUAL_REPLY_QUEUE をDBで管理
+- **Render Manual Scaling対応**: 2〜3台のインスタンスで同時接続15台に対応
+- **自動フォールバック**: DB接続失敗時はメモリベースの動作にフォールバック
+
+なお、2026年2月には **GCP Cloud Run** および **Neon PostgreSQL** へ移行しています。Cloud Run ではインスタンスのスケールやマルチインスタンスの扱いがRenderと異なりますが、セッションとグローバル状態をDBに置く設計はそのまま活きており、どの実行環境でも一貫した動作を保つ基盤になっています。
+
 ## まとめ
 
-マルチインスタンス対応の実装により、複数インスタンス間でセッションデータを共有できるようになりました。PostgreSQLベースのセッション管理システムにより、スケーラビリティが向上し、2-3台のインスタンスで同時接続15台に対応できるようになりました。
+マルチインスタンス対応の実装により、複数インスタンス間でセッションデータを共有できるようになりました。PostgreSQLベースのセッション管理システムにより、スケーラビリティが向上し、2〜3台のインスタンスで同時接続15台に対応できるようになりました。
 
 **分散システムの難しさを実感しながらも、継続的な改善により、より堅牢なシステムを構築できました。**
 
-今後も、より効率的なセッション管理システムの構築を目指していきます。
+今後も、Cloud Run / Neon 環境に合わせたチューニングや、より効率的なセッション管理の検討を続けていきます。

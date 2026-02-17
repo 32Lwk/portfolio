@@ -162,12 +162,73 @@ export function ProjectForm({ initial, onSuccess }: ProjectFormProps) {
     relatedLinks: initial?.relatedLinks,
   });
 
+  const checkImageExists = async (imagePath: string): Promise<boolean> => {
+    if (!imagePath || imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return true; // 外部URLはスキップ
+    }
+    try {
+      const res = await fetch("/api/admin/check-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imagePath }),
+      });
+      const data = await res.json();
+      return data.exists === true;
+    } catch {
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
     setSaving(true);
     try {
+      // 画像の存在確認
+      const missingImages: string[] = [];
+      
+      // メイン画像の確認
+      if (image && !(await checkImageExists(image))) {
+        missingImages.push(`メイン画像: ${image}`);
+      }
+
+      // スクリーンショットの確認
+      for (let i = 0; i < screenshots.length; i++) {
+        const ss = screenshots[i];
+        if (ss.url && !(await checkImageExists(ss.url))) {
+          missingImages.push(`スクリーンショット ${i + 1} の画像: ${ss.url}`);
+        }
+        if (ss.thumbnail && !(await checkImageExists(ss.thumbnail))) {
+          missingImages.push(`スクリーンショット ${i + 1} のサムネイル: ${ss.thumbnail}`);
+        }
+      }
+
+      // サブプロジェクトの画像確認
+      for (let i = 0; i < subProjects.length; i++) {
+        const sub = subProjects[i];
+        if (sub.image && !(await checkImageExists(sub.image))) {
+          missingImages.push(`サブプロジェクト「${sub.name || `サブプロジェクト ${i + 1}`}」の画像: ${sub.image}`);
+        }
+        if (sub.screenshots) {
+          for (let j = 0; j < sub.screenshots.length; j++) {
+            const ss = sub.screenshots[j];
+            if (ss.url && !(await checkImageExists(ss.url))) {
+              missingImages.push(`サブプロジェクト「${sub.name || `サブプロジェクト ${i + 1}`}」のスクリーンショット ${j + 1}: ${ss.url}`);
+            }
+            if (ss.thumbnail && !(await checkImageExists(ss.thumbnail))) {
+              missingImages.push(`サブプロジェクト「${sub.name || `サブプロジェクト ${i + 1}`}」のスクリーンショット ${j + 1} のサムネイル: ${ss.thumbnail}`);
+            }
+          }
+        }
+      }
+
+      if (missingImages.length > 0) {
+        throw new Error(
+          `以下の画像ファイルが見つかりません:\n\n${missingImages.join("\n")}\n\n画像をアップロードするか、正しいパスを入力してください。`
+        );
+      }
+
       const res = await fetch("/api/admin/projects");
       const current: Project[] = res.ok ? await res.json() : [];
       const next = initial

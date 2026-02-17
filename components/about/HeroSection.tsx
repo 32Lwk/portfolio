@@ -72,7 +72,7 @@ function HeroImage({
         fill
         className="object-cover"
         style={objectPosition ? { objectPosition } : undefined}
-        sizes={sizePx != null ? `${sizePx}px` : "128px"}
+        sizes={sizePx != null ? `${sizePx * 2}px` : "256px"}
         onError={() => setHasError(true)}
       />
     </div>

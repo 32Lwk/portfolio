@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
     content: string;
     featured?: boolean;
     draft?: boolean;
+    hidden?: boolean;
     oldSlug?: string;
   };
 
@@ -46,6 +47,7 @@ export async function POST(request: NextRequest) {
     content,
     featured = false,
     draft = false,
+    hidden = false,
     oldSlug,
   } = body;
 
@@ -94,6 +96,7 @@ export async function POST(request: NextRequest) {
     slug,
     featured: Boolean(featured),
     draft: Boolean(draft),
+    hidden: Boolean(hidden),
   };
 
   const fileContent = matter.stringify(finalContent, frontmatter);

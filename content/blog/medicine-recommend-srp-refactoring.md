@@ -1,24 +1,43 @@
 ---
-title: "SRP改善とコード品質向上 - リファクタリングの経験"
-description: "Single Responsibility Principle (SRP) に基づいた大規模リファクタリング、コードの可読性とメンテナンス性の向上について"
-date: "2026-02-08"
-category: "技術"
-tags: ["医薬品相談ツール", "開発記録"]
-author: "川嶋宥翔"
+title: SRP改善とコード品質向上 - リファクタリングの経験
+description: Single Responsibility Principle (SRP) に基づいた大規模リファクタリング、コードの可読性とメンテナンス性の向上について
+date: '2026-02-08'
+category: 技術
+tags:
+  - 医薬品相談ツール
+  - 開発記録
+author: 川嶋宥翔
 featured: false
+hidden: false
 ---
 
 # SRP改善とコード品質向上 - リファクタリングの経験
 
 コードの可読性とメンテナンス性を向上させるため、Single Responsibility Principle (SRP) に基づいた大規模リファクタリングを実施しました。この記事では、リファクタリングの背景、実装の詳細、そして学んだ教訓について解説します。
 
+[medicine-recommend-system](https://github.com/32Lwk/medicine-recommend-system) のREADME（2026年2月8日更新）では、**app.py のスリム化**（約89行）、ルートの責務分離（main / admin / api / feedback）、**rule_based_recommendation** の分割（core/recommendation/ 配下）、**medicine_logic**・**counseling_response**・**chat_handler** の分割、および **scripts/**（開発・リファクタ用）と **src/**（アプリ本体）の役割整理がまとめられています。
+
 ## リファクタリングの背景
+
+### リファクタ前後の規模（README・リポジトリに基づく）
+
+作業規模を一目で把握できるよう、リファクタ前後の行数・役割を下表にまとめます。
+
+| 対象 | リファクタ前 | リファクタ後（README 2026年2月8日時点） |
+|------|--------------|----------------------------------------|
+| **app.py** | ビュー定義を含み約200行程度 | **約89行**（アプリ作成・設定・エラーハンドラー・Blueprint登録・起動のみ） |
+| **chat_handler.py** | 約2,641行 | オーケストレーションのみ。入力検証・トリアージ・カウンセリング・推奨・店舗・緊急などは `src/handlers/chat/` 配下の各モジュールに分離 |
+| **rule_based_recommendation.py** | 約1,580行 | オーケストレーションと re-export のみ。定数は `recommendation_constants.py`、スコアリング等は `src/core/recommendation/` 配下に分割 |
+| **medicine_logic.py** | 大型モジュール | **約215行**（エントリポイントと re-export）。詳細は `src/core/medicine/` 配下に分割 |
+| **counseling_response.py** | 大型モジュール | **約104行**（ファサード）。テンプレート・生成・話題転換などは `src/services/counseling/` 配下に分割 |
+| **ルート** | app.py にビュー定義 | `main_routes` / `admin_routes` / `api_routes` / `feedback_routes` に分離 |
+| **scripts と src** | 混在 | **scripts/** は開発・リファクタ用スクリプト、**src/** はアプリ本体（実行時にのみ読み込み） |
 
 ### 課題
 
 開発初期段階では、機能追加を優先していたため、以下のような問題が発生していました：
 
-1. **巨大なファイル**: `chat_handler.py`が約2,641行、`rule_based_recommendation.py`が約1,580行
+1. **巨大なファイル**: `chat_handler.py` が約2,641行、`rule_based_recommendation.py` が約1,580行
 2. **責務の混在**: 1つのファイルに複数の責務が混在
 3. **テストの困難**: 巨大なファイルのため、単体テストが困難
 4. **可読性の低下**: コードの理解が困難
