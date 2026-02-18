@@ -428,7 +428,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                           {video.thumbnail ? (
                             <SafeImage
                               src={video.thumbnail}
-                              alt={video.alt || video.title || "動画サムネイル"}
+                              alt={video.alt || "動画サムネイル"}
                               fill
                               className="object-cover transition-transform duration-300 group-hover:scale-105"
                               sizes="(max-width: 768px) 100vw, 600px"
