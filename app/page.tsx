@@ -54,7 +54,7 @@ export default function Home() {
                 名古屋大学 理学部物理学科 2年生
               </p>
               <p className="text-lg sm:text-xl text-muted-foreground">
-                フルスタックエンジニア / Webデザイナー
+                フルスタックエンジニア
               </p>
             </div>
             
