@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>履歴書（Leverages 用ひな形）</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Yu Mincho", "游明朝", "Hiragino Mincho ProN", serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      margin: 0;
+      padding: 12mm 15mm;
+      max-width: 210mm;
+      min-height: 297mm;
+    }
+    @media print {
+      body { padding: 10mm 15mm; }
+      .no-print { display: none; }
+      @page { size: A4; margin: 0; }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 18pt;
+      font-weight: bold;
+      margin: 0 0 6px 0;
+      letter-spacing: 0.2em;
+    }
+
+    /* 共通：表の罫線 */
+    table.rikureki {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    table.rikureki th,
+    table.rikureki td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      vertical-align: top;
+    }
+    table.rikureki th {
+      width: 72px;
+      text-align: center;
+      background: #f5f5f5;
+      font-weight: normal;
+    }
+    table.rikureki .cell-content {
+      min-height: 1.2em;
+    }
+
+    /* 上部ブロック：日付・氏名・写真・生年月日・住所・電話・メール */
+    table.rikureki-top th { width: 72px; }
+    table.rikureki-top .col-content { width: auto; }
+    table.rikureki-top .col-photo {
+      width: 70px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    table.rikureki-top .photo-box {
+      width: 60px;
+      height: 72px;
+      margin: 0 auto;
+      border: 1px dashed #666;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9pt;
+      color: #888;
+    }
+
+    /* 学歴・職歴 */
+    table.rikureki-edu th { width: 72px; }
+    table.rikureki-edu .col-year { width: 52px; text-align: center; }
+    table.rikureki-edu .col-desc { width: auto; }
+    table.rikureki-edu td.cell-empty { height: 20px; }
+
+    /* 賞罰・志望動機・特技・資格 */
+    table.rikureki-wide th { width: 72px; }
+    table.rikureki-wide .cell-content { min-height: 60px; }
+    table.rikureki-wide .cell-content.motivation { min-height: 100px; }
+    table.rikureki-wide .cell-content.combined-pr { min-height: 140px; }
+    table.rikureki-wide .pr-links { font-size: 9pt; margin-top: 6px; }
+    table.rikureki-wide .pr-links a { color: #0066cc; }
+    @media print { table.rikureki-wide .pr-links a { color: #000; } }
+
+    .note {
+      font-size: 9pt;
+      color: #666;
+      margin-top: 8px;
+      padding: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <p class="no-print note">※ ブラウザで「印刷 → PDF に保存」で PDF 化できます。記入後、写真を貼る場合は写真セルに画像を配置してください。</p>
+
+  <h1>履 歴 書</h1>
+
+  <!-- 日付・氏名・写真・生年月日・住所・電話・メール -->
+  <table class="rikureki rikureki-top">
+    <tr>
+      <th>日付</th>
+      <td class="col-content cell-content"></td>
+      <td rowspan="4" class="col-photo">
+        <div class="photo-box">写真</div>
+      </td>
+    </tr>
+    <tr>
+      <th rowspan="3">氏名</th>
+      <td class="cell-content"></td>
+    </tr>
+    <tr><td class="cell-content"></td></tr>
+    <tr><td class="cell-content"></td></tr>
+    <tr>
+      <th>生年月日</th>
+      <td class="col-content cell-content"></td>
+    </tr>
+    <tr>
+      <th>現住所</th>
+      <td colspan="2" class="cell-content"></td>
+    </tr>
+    <tr>
+      <th>電話番号</th>
+      <td colspan="2" class="cell-content"></td>
+    </tr>
+    <tr>
+      <th>メール</th>
+      <td colspan="2" class="cell-content"></td>
+    </tr>
+  </table>
+
+  <!-- 学歴・職歴 -->
+  <table class="rikureki rikureki-edu">
+    <tr>
+      <th rowspan="16">学歴・職歴</th>
+      <td class="col-year"></td>
+      <td class="col-desc cell-content"></td>
+    </tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-content"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+    <tr><td class="col-year"></td><td class="col-desc cell-empty"></td></tr>
+  </table>
+
+  <!-- 賞罰 -->
+  <table class="rikureki rikureki-wide">
+    <tr>
+      <th>賞罰</th>
+      <td class="cell-content"></td>
+    </tr>
+  </table>
+
+  <!-- 志望動機 -->
+  <table class="rikureki rikureki-wide">
+    <tr>
+      <th>志望動機</th>
+      <td class="cell-content motivation"></td>
+    </tr>
+  </table>
+
+  <!-- 特技・趣味・自己PR（強み・レバレジーズへの思い・ポートフォリオ・GitHub・Live Demo をまとめて記載） -->
+  <table class="rikureki rikureki-wide">
+    <tr>
+      <th>特技・趣味・自己PR</th>
+      <td class="cell-content combined-pr">
+        <!-- 特技・趣味・自己PR（強み・レバレジーズへの思いを織り込み、末尾でリンクを共有） -->
+        <p class="pr-text">私の強みは、現場の課題を技術で形にし、継続して改善できることです。ドラッグストアでの勤務経験から高齢者や言語の壁による相談の難しさを実感し、AIを活用したチャット型医薬品相談ツールを個人で開発しました。複数コンテストで受賞し、審査員やユーザーからのフィードバックを反映しながら、アクセシビリティや安全性の改善を重ねています。プログラミング（Python、TypeScript）、登録販売者・基本情報技術者の資格を活かし、要件定義から運用まで一貫して担当してきました。趣味は個人開発と技術書の読書で、「システムを誤らせない設計」を軸に学習を続けています。レバレジーズの企業理念とオールインハウス体制に惹かれており、御社のIT・医療・ヘルスケア領域でこの経験を活かし、顧客と関係者の幸福に貢献したいと考えています。作品・開発の詳細は下記で公開しています。</p>
+        <p class="pr-links">
+          ポートフォリオ: <a href="https://www.yutok.dev/">https://www.yutok.dev/</a><br>
+          GitHub: <a href="https://github.com/32Lwk">https://github.com/32Lwk</a><br>
+          医薬品相談ツール Demo: <a href="https://medicine-recommend-340042923793.asia-northeast1.run.app/">https://medicine-recommend-340042923793.asia-northeast1.run.app/</a>
+        </p>
+      </td>
+    </tr>
+  </table>
+
+  <!-- 資格 -->
+  <table class="rikureki rikureki-wide">
+    <tr>
+      <th>資格</th>
+      <td class="cell-content"></td>
+    </tr>
+  </table>
+</body>
+</html>

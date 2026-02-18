@@ -50,7 +50,7 @@
 - ✅ サイトタイトル、説明、キーワード
 - ✅ OGP設定
 - ✅ Twitter Card設定
-- ✅ サイトURL（https://kawashimayuto.dev）
+- ✅ サイトURL（https://www.yutok.dev）
 
 ---
 

@@ -1,10 +1,27 @@
 import { Metadata } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { BlogList } from "@/components/blog/BlogList";
+import { getSiteUrl } from "@/lib/site-url";
+import { getDefaultOgImage } from "@/lib/seo";
+
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Blog",
   description: "技術記事、キャリア、学習記録、医療×ITに関するブログ記事一覧。",
+  openGraph: {
+    url: `${siteUrl}/blog`,
+    title: "Blog | 川嶋 宥翔",
+    description: "技術記事、キャリア、学習記録、医療×ITに関するブログ記事一覧。",
+    type: "website",
+    images: [getDefaultOgImage("川嶋 宥翔 | Blog")],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | 川嶋 宥翔",
+    description: "技術記事、キャリア、学習記録、医療×ITに関するブログ記事一覧。",
+    images: ["/og_image.png"],
+  },
 };
 
 export default function BlogPage() {

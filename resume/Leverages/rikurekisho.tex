@@ -1,0 +1,169 @@
+% 日本式履歴書（川嶋宥翔）
+% ビルド: xelatex -jobname=Rirekisho_Yuto_Kawashima rikurekisho.tex
+% ※ プレースホルダー（【】内）はご自身で記入・差し替えしてください。
+
+\documentclass[10pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{Yu Mincho}[Scale=0.95]
+\usepackage{geometry}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{url}
+
+\geometry{margin=15mm, top=8mm, bottom=12mm}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\sloppy
+
+% 表のセル高さ
+\newcommand{\cellht}{6.5mm}
+\newcommand{\cellhtl}{8mm}
+
+\begin{document}
+
+\begin{center}
+  {\large \textbf{履 歴 書}}
+\end{center}
+
+\vspace{2mm}
+
+% ----- 日付・氏名・写真・生年月日・住所・連絡先 -----
+\noindent
+\begin{tabular}{|c|p{78mm}|c|}
+  \hline
+  日付 & 2026年2月19日 & \multirow{4}{*}{\parbox[c][20mm][c]{16mm}{\centering\includegraphics[width=16mm,height=18mm,keepaspectratio]{profile.jpg}}} \\
+  \cline{1-2}
+  \multirow{3}{*}{氏名} & 川嶋　宥翔 & \\
+  \cline{2-2}
+  & （カワシマ　ユウト） & \\
+  \cline{2-2}
+  &  & \\
+  \hline
+  生年月日 & 2005年10月28日 & \\
+  \hline
+  現住所 & \parbox[t]{72mm}{〒466-0801　愛知県名古屋市昭和区田面町1-41　シャトル41　101号室} & \\
+  \hline
+  電話番号 & 080-8537-2616 & \\
+  \hline
+  メール & kawashima.yuto.c2@s.mail.nagoya-u.ac.jp & \\
+  \hline
+\end{tabular}
+
+\vspace{6mm}
+
+% ----- 学歴・職歴 -----
+\noindent
+\begin{tabular}{|c|p{12mm}|p{95mm}|}
+  \hline
+  \multirow{14}{*}{学歴・職歴} & 2024年 & 3月　和歌山県立向陽高等学校　卒業 \\
+  \cline{2-3}
+  & 2024年 & 4月　東海国立大学機構　名古屋大学　理学部　入学 \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  & 2028年 & 3月　東海国立大学機構　名古屋大学　理学部　卒業見込み \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  & 2024年 & 4月　マツモトキヨシ（登録販売者）　入社 \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  & 現在に至る \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  &  \\
+  \cline{2-3}
+  &  &  \\
+  \hline
+\end{tabular}
+
+\vspace{6mm}
+
+% ----- 賞罰 -----
+\noindent
+\begin{tabular}{|c|p{110mm}|}
+  \hline
+  \multirow{6}{*}{賞罰} & 賞　有 \\
+  \cline{2-2}
+  & 2025年11月　ユメカタリ 学生生成AIコンテスト（愛知100選編集事務局）最優秀賞 \\
+  \cline{2-2}
+  & 2025年12月　第13回 ビジネスプランコンテスト（椙山女学園大学）優秀賞 \\
+  \cline{2-2}
+  & 2025年12月　第9回和歌山県データ利活用コンペティション　クオリティソフト賞 \\
+  \cline{2-2}
+  & 2026年1月　doda ビジネスコンテスト　審査員特別賞 \\
+  \cline{2-2}
+  & 罰　無 \\
+  \hline
+\end{tabular}
+
+\vspace{6mm}
+
+% ----- 志望動機 -----
+\noindent
+\begin{tabular}{|c|p{110mm}|}
+  \hline
+  \multirow{8}{*}{志望動機} & レバレジーズの企業理念「顧客の創造を通じて関係者全員の幸福を追求し各個人の成長を促す」に共感し、オールインハウスで事業を創る体制に強く惹かれ志望しました。 \\
+  \cline{2-2}
+  & ドラッグストアでの現場経験を基に、AIを活用したチャット型医薬品相談ツールを個人で開発し、複数のコンテストで受賞した経験があります。 \\
+  \cline{2-2}
+  & この実績を御社のIT・医療・ヘルスケア領域で活かし、顧客と関係者の幸福に貢献したいと考え、エンジニア職を志望しております。 \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \hline
+\end{tabular}
+
+\vspace{6mm}
+
+% ----- 特技・趣味・自己PR（強み・レバレジーズへの思い・リンクを1つにまとめ） -----
+\noindent
+\begin{tabular}{|c|p{110mm}|}
+  \hline
+  \multirow{8}{*}{特技・趣味・自己PR} & 私の強みは、現場の課題を技術で形にし、継続して改善できることです。ドラッグストアでの勤務経験から高齢者や言語の壁による相談の難しさを実感し、AIを活用したチャット型医薬品相談ツールを個人で開発しました。複数コンテストで受賞し、審査員やユーザーからのフィードバックを反映しながら、アクセシビリティや安全性の改善を重ねています。 \\
+  \cline{2-2}
+  & プログラミング（Python、TypeScript）、登録販売者・基本情報技術者の資格を活かし、要件定義から運用まで一貫して担当してきました。趣味は個人開発と技術書の読書で、「システムを誤らせない設計」を軸に学習を続けています。レバレジーズの企業理念とオールインハウス体制に惹かれており、御社のIT・医療・ヘルスケア領域でこの経験を活かし、顧客と関係者の幸福に貢献したいと考えています。 \\
+  \cline{2-2}
+  & 作品・開発の詳細：ポートフォリオ \url{https://www.yutok.dev/}、GitHub \url{https://github.com/32Lwk}、医薬品相談ツールDemo \url{https://medicine-recommend-340042923793.asia-northeast1.run.app/} \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \cline{2-2}
+  &  \\
+  \hline
+\end{tabular}
+
+\vspace{2mm}
+
+\noindent
+\begin{tabular}{|c|p{110mm}|}
+  \hline
+  \multirow{2}{*}{資格} & 基本情報技術者、登録販売者 \\
+  \cline{2-2}
+  &  \\
+  \hline
+\end{tabular}
+
+\end{document}

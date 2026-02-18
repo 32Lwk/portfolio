@@ -1,5 +1,6 @@
 import { BlogPost } from "@/lib/blog";
 import { Project } from "@/lib/projects";
+import { getSiteUrl } from "@/lib/site-url";
 
 interface StructuredDataProps {
   type: "Person" | "Article" | "WebSite" | "Project";
@@ -7,7 +8,7 @@ interface StructuredDataProps {
 }
 
 export function StructuredData({ type, data }: StructuredDataProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = getSiteUrl();
 
   let structuredData: any = {
     "@context": "https://schema.org",

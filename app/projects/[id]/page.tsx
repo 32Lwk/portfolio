@@ -13,6 +13,7 @@ import { Github, ExternalLink, ArrowLeft, Calendar, GitCommit, Code, Users, File
 import { ProjectShareButton } from "@/components/portfolio/ProjectShareButton";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { ProjectHistorySection } from "@/components/portfolio/ProjectHistorySection";
+import { getSiteUrl } from "@/lib/site-url";
 
 interface ProjectDetailPageProps {
   params: Promise<{ id: string }>;
@@ -37,12 +38,19 @@ export async function generateMetadata({
     };
   }
 
+  const baseUrl = getSiteUrl();
+  const projectUrl = `${baseUrl}/projects/${id}`;
+
   return {
     title: `${project.name} | Projects`,
     description: project.description,
+    alternates: {
+      canonical: projectUrl,
+    },
     openGraph: {
       title: project.name,
       description: project.description,
+      url: projectUrl,
       type: "website",
     },
   };
@@ -89,8 +97,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
   // プロジェクトの歴史（GitHubのREADMEから取得した情報を基に）
   const projectHistory = getProjectHistory(project.id);
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = getSiteUrl();
   const projectUrl = `${baseUrl}/projects/${id}`;
 
   return (
@@ -421,7 +428,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                           {video.thumbnail ? (
                             <SafeImage
                               src={video.thumbnail}
-                              alt={video.alt}
+                              alt={video.alt || video.title || "動画サムネイル"}
                               fill
                               className="object-cover transition-transform duration-300 group-hover:scale-105"
                               sizes="(max-width: 768px) 100vw, 600px"

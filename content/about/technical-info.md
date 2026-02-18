@@ -353,7 +353,7 @@ interface ResumeData {
 ### 必須環境変数
 ```env
 OPENAI_API_KEY=your_openai_api_key
-NEXT_PUBLIC_SITE_URL=https://kawashimayuto.dev
+NEXT_PUBLIC_SITE_URL=https://www.yutok.dev
 ```
 
 ### オプション環境変数

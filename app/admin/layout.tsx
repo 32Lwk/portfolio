@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { isAdminEnabled } from "@/lib/admin-auth";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "管理画面",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 export default function AdminLayout({
   children,

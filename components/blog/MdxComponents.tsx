@@ -103,7 +103,7 @@ export const mdxComponents = {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={props.src}
-            alt={props.alt || ""}
+            alt={props.alt ?? "記事内の画像"}
             className="rounded-lg w-full max-w-full"
             style={{ width: "100%", height: "auto" }}
             loading="lazy"
@@ -117,7 +117,7 @@ export const mdxComponents = {
       <span className="my-4 flex justify-center">
         <Image
           src={props.src}
-          alt={props.alt || ""}
+          alt={props.alt ?? "記事内の画像"}
           width={numWidth}
           height={numHeight}
           className="rounded-lg"
