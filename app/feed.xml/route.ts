@@ -1,8 +1,8 @@
 import { getAllPosts } from "@/lib/blog";
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function GET() {
+  const baseUrl = getSiteUrl();
   const posts = getAllPosts();
 
   const rssItems = posts

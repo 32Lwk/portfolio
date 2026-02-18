@@ -1,11 +1,14 @@
 import { Metadata } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
 const siteConfig = {
   name: "川嶋 宥翔 | Portfolio & Blog",
   description:
     "名古屋大学 理学部物理学科に在籍する大学生。安全性や正確性が強く求められる分野に関心を持ち、「システムを誤らせない設計」を軸に、WebアプリケーションやAIを用いた個人開発に取り組んでいます。",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev",
-  ogImage: "/og-image.png",
+  get url() {
+    return getSiteUrl();
+  },
+  ogImage: "/og_image.png",
   links: {
     github: "https://github.com/32Lwk",
     linkedin: "https://www.linkedin.com/in/kawashimayuto/",
@@ -97,4 +100,14 @@ export function generateStructuredData({
   }
 
   return baseStructuredData;
+}
+
+/** 一覧ページなどで使うデフォルト OGP 画像（共通化用） */
+export function getDefaultOgImage(alt?: string) {
+  return {
+    url: siteConfig.ogImage,
+    width: 1200,
+    height: 630,
+    alt: alt ?? siteConfig.name,
+  };
 }

@@ -2,9 +2,10 @@ import { MetadataRoute } from "next";
 import { getAllPosts, getAllTags } from "@/lib/blog";
 import { BLOG_CATEGORIES } from "@/lib/blog-constants";
 import { getAllProjects } from "@/lib/projects";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = getSiteUrl();
 
   const posts = getAllPosts();
   const projects = getAllProjects();

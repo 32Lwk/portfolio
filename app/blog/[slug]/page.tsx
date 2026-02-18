@@ -12,6 +12,7 @@ import { BlogNavigation } from "@/components/blog/BlogNavigation";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { mdxComponents } from "@/components/blog/MdxComponents";
+import { getSiteUrl } from "@/lib/site-url";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -36,8 +37,7 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = getSiteUrl();
   const postUrl = `${baseUrl}/blog/${slug}`;
 
   const firstImage = getFirstImageFromContent(post.content);
@@ -54,20 +54,22 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
-    ...(ogImage && {
-      openGraph: {
-        title: post.title,
-        description: post.description,
-        url: postUrl,
-        images: [{ url: ogImage }],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: post.title,
-        description: post.description,
-        images: [ogImage],
-      },
-    }),
+    alternates: {
+      canonical: postUrl,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: postUrl,
+      type: "article",
+      ...(ogImage && { images: [{ url: ogImage }] }),
+    },
+    twitter: {
+      card: ogImage ? "summary_large_image" : "summary",
+      title: post.title,
+      description: post.description,
+      ...(ogImage && { images: [ogImage] }),
+    },
   };
 }
 
@@ -85,7 +87,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const nextPost =
     currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = getSiteUrl();
   const postUrl = `${baseUrl}/blog/${slug}`;
 
   return (

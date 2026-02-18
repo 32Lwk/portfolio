@@ -240,7 +240,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ja_JP",
-    url: "https://kawashimayuto.dev",
+    url: "https://www.yutok.dev",
     title: "川嶋 宥翔 | Portfolio & Blog",
     description: "...",
     siteName: "川嶋 宥翔 | Portfolio & Blog",
@@ -307,7 +307,7 @@ import { getAllPosts } from "@/lib/blog";
 import { getAllProjects } from "@/lib/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://kawashimayuto.dev";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.yutok.dev";
   const posts = getAllPosts();
   const projects = getAllProjects();
 

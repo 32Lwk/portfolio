@@ -5,6 +5,7 @@ import {
   getPostsByTag,
 } from "@/lib/blog";
 import { BlogList } from "@/components/blog/BlogList";
+import { getSiteUrl } from "@/lib/site-url";
 
 interface TagPageProps {
   params: Promise<{ tag: string }>;
@@ -25,9 +26,12 @@ export async function generateMetadata({
     return { title: "Tag Not Found" };
   }
   const posts = getPostsByTag(decodedTag);
+  const baseUrl = getSiteUrl();
+  const canonicalUrl = `${baseUrl}/blog/tag/${encodeURIComponent(decodedTag)}`;
   return {
     title: `タグ: ${decodedTag}`,
     description: `「${decodedTag}」タグの付いたブログ記事一覧（${posts.length}件）`,
+    alternates: { canonical: canonicalUrl },
   };
 }
 

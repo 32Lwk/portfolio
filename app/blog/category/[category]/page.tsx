@@ -6,6 +6,7 @@ import {
   type BlogPost,
 } from "@/lib/blog";
 import { BlogList } from "@/components/blog/BlogList";
+import { getSiteUrl } from "@/lib/site-url";
 
 interface CategoryPageProps {
   params: Promise<{ category: string }>;
@@ -24,9 +25,12 @@ export async function generateMetadata({
     return { title: "Category Not Found" };
   }
   const posts = getPostsByCategory(decodedCategory as BlogPost["category"]);
+  const baseUrl = getSiteUrl();
+  const canonicalUrl = `${baseUrl}/blog/category/${encodeURIComponent(decodedCategory)}`;
   return {
     title: `カテゴリ: ${decodedCategory}`,
     description: `「${decodedCategory}」カテゴリのブログ記事一覧（${posts.length}件）`,
+    alternates: { canonical: canonicalUrl },
   };
 }
 

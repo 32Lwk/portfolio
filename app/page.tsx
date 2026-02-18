@@ -7,7 +7,8 @@ import { getAllPosts } from "@/lib/blog";
 import { ArrowRight } from "lucide-react";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { ParticleSimulation } from "@/components/animations/ParticleSimulation";
+import { TypingSVG } from "@/components/animations/TypingSVG";
+import { ParticleSimulationDynamic } from "@/components/animations/ParticleSimulationDynamic";
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects().slice(0, 3);
@@ -17,7 +18,7 @@ export default function Home() {
     <>
       <StructuredData type="Person" />
       <StructuredData type="WebSite" />
-      <ParticleSimulation />
+      <ParticleSimulationDynamic />
       <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8 overflow-visible">
@@ -55,11 +56,7 @@ export default function Home() {
               </p>
             </div>
             
-            <p className="mt-6 text-lg sm:text-xl leading-8 text-muted-foreground max-w-2xl mx-auto">
-              「<span className="text-primary font-semibold">システムを誤らせない設計</span>」を最優先に、
-              <br className="hidden sm:block" />
-              医療×AI分野で個人開発に取り組んでいます。
-            </p>
+            <TypingSVG />
             
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button asChild size="lg" className="group relative overflow-hidden">
