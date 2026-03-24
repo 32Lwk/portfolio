@@ -47,6 +47,10 @@ next-env.d.ts
 # cache
 .cache/
 
+# 個人情報・履歴書（GitHubにプッシュしない）
+/content/about/personal-info.md
+/resume/
+
 # LaTeX (resume) build artifacts
 /resume/*.aux
 /resume/*.log

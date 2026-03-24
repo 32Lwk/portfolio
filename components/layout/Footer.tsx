@@ -33,8 +33,6 @@ export function Footer() {
             <h3 className="text-lg font-semibold">川嶋 宥翔</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               名古屋大学 理学部物理学科 2年生
-              <br />
-              フルスタックエンジニア
             </p>
           </div>
           <div>

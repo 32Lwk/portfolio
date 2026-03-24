@@ -35,7 +35,7 @@ export function getResumeData(): ResumeData {
     personalInfo: {
       name: "川嶋宥翔",
       nameEn: "Kawashima Yuto",
-      title: "名古屋大学 理学部物理学科 2年生 / フルスタックエンジニア",
+      title: "名古屋大学 理学部物理学科 2年生",
       email: "kawashima.yuto.c2@s.mail.nagoya-u.ac.jp",
       github: "https://github.com/32Lwk",
       linkedin: "https://www.linkedin.com/in/kawashimayuto/",
@@ -44,7 +44,7 @@ export function getResumeData(): ResumeData {
       {
         period: "2024年 - 現在",
         institution: "名古屋大学 理学部物理学科",
-        description: "2028年3月卒業予定",
+        description: "2028年3月卒業予定。GPA: 3.31 / 4.0",
       },
       {
         period: "2021年 - 2024年",

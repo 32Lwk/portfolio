@@ -62,7 +62,7 @@ export function AboutFormHero({ data, onChange }: AboutFormHeroProps) {
           id="hero-subtitle"
           value={data.subtitle}
           onChange={(e) => onChange({ ...data, subtitle: e.target.value })}
-          placeholder="名古屋大学 理学部物理学科 2年生 / フルスタックエンジニア"
+          placeholder="名古屋大学 理学部物理学科 2年生"
         />
       </div>
       <div className="grid gap-2">
