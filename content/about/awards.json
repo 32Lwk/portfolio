@@ -105,5 +105,47 @@
     "result": "審査員特別賞",
     "urls": [],
     "image": "/images/about/awards/item-4/1771182062591-A10732B1-596A-4D6D-9EDB-3E12BF0C2F4D.jpg"
+  },
+  {
+    "period": "2026年3月26日（木曜日）～29日（日曜日）",
+    "title": "セキュリティ・キャンプ2026コネクト",
+    "organizer": "独立行政法人情報処理推進機構（IPA） / 一般社団法人セキュリティ・キャンプ協議会",
+    "description": "セキュリティを「ネットワーク / AI / 法律」など他分野と掛け合わせて捉える視点を学び、異分野の参加者同士で相互に学び合いながら、多面的に検討できる人材の発掘・育成を目的とした合宿型プログラム。AIレッドチーミングクラスに参加。",
+    "type": "研修",
+    "result": "AIレッドチーミングクラス 受講",
+    "memories": [
+      {
+        "text": "マイステイズ新浦安で開催された合宿型プログラムに参加し、AIレッドチーミングをテーマに学び・議論しました。",
+        "images": [
+          {
+            "src": "/images/about/awards/item-5/632856F4-3433-4915-817D-E042796E25DC.jpg",
+            "alt": "会場内の看板（セキュリティ・キャンプ2026コネクト）"
+          },
+          {
+            "src": "/images/about/awards/item-5/C6671366-9C0A-4921-B4A4-33A0C231D969.jpg",
+            "alt": "入口付近の看板（セキュリティ・キャンプ2026コネクト）"
+          },
+          {
+            "src": "/images/about/awards/item-5/1174FB39-0831-4B66-A012-86604FE8C896.jpg",
+            "alt": "宿泊したホテルの部屋の様子"
+          },
+          {
+            "src": "/images/about/awards/item-5/16941C24-DDE6-446E-866A-8EC3F83B5A8B.jpg",
+            "alt": "修了証"
+          }
+        ]
+      }
+    ],
+    "image": "/images/about/awards/item-5/632856F4-3433-4915-817D-E042796E25DC.jpg",
+    "urls": [
+      {
+        "url": "https://www.ipa.go.jp/jinzai/security-camp/2025/connect/index.html",
+        "label": "IPA"
+      },
+      {
+        "url": "https://www.security-camp.or.jp/connect/index.html",
+        "label": "協議会"
+      }
+    ]
   }
 ]

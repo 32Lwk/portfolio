@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "generate:metadata": "tsx scripts/generate-metadata.ts"
+    "generate:metadata": "tsx scripts/generate-metadata.ts",
+    "slidev:intro": "slidev --open resume/slidev-self-intro/slides.md",
+    "slidev:intro:build": "slidev build resume/slidev-self-intro/slides.md --out resume/slidev-self-intro/dist"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -41,12 +43,15 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@slidev/cli": "^52.14.1",
+    "@slidev/theme-default": "^0.25.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "qrcode": "^1.5.4",
     "shadcn": "^3.8.4",
     "tailwindcss": "^4",
     "tsx": "^4.7.0",

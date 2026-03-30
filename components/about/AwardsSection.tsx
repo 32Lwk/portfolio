@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
-import { Award, Trophy } from "lucide-react";
+import { Award, GraduationCap, Trophy } from "lucide-react";
 import { getAwards, type AwardItem } from "@/lib/awards";
 import { useAboutPreview } from "@/components/admin/AboutPreviewContext";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+
+const TRAINING_TYPES = new Set([
+  "研修",
+  "講座",
+  "プログラム",
+  "ブートキャンプ",
+  "camp",
+  "Camp",
+  "bootcamp",
+  "Bootcamp",
+]);
+
+function getAwardTypeIcon(type: string) {
+  if (TRAINING_TYPES.has(type)) return GraduationCap;
+  if (type === "大会" || type === "コンテスト") return Trophy;
+  return Award;
+}
 
 function AwardImage({
   src,
@@ -80,11 +97,10 @@ export function AwardsSection() {
                   className="group relative flex w-full items-start gap-6 text-left transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 >
                   <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 bg-background">
-                    {item.type === "大会" ? (
-                      <Trophy className="h-6 w-6 text-primary" />
-                    ) : (
-                      <Award className="h-6 w-6 text-primary" />
-                    )}
+                    {(() => {
+                      const Icon = getAwardTypeIcon(item.type);
+                      return <Icon className="h-6 w-6 text-primary" />;
+                    })()}
                   </div>
                   <div className="flex-1 pb-8">
                     <div className="flex flex-wrap items-center gap-2">
@@ -127,10 +143,10 @@ export function AwardsSection() {
         open={!!openItem}
         onOpenChange={(open) => !open && setOpenItem(null)}
       >
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto p-0">
           {openItem && (
-            <>
-              <DialogHeader>
+            <div className="space-y-6 p-6">
+              <DialogHeader className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary" className="text-xs">
                     {openItem.type}
@@ -144,14 +160,16 @@ export function AwardsSection() {
                     {openItem.period}
                   </span>
                 </div>
-                <DialogTitle className="text-xl">{openItem.title}</DialogTitle>
+                <DialogTitle className="text-xl leading-snug">
+                  {openItem.title}
+                </DialogTitle>
                 {openItem.organizer && (
                   <p className="text-sm text-muted-foreground">
                     主催：{openItem.organizer}
                   </p>
                 )}
                 {openItem.description && (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm leading-relaxed text-muted-foreground">
                     {openItem.description}
                   </p>
                 )}
@@ -162,13 +180,53 @@ export function AwardsSection() {
                 <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
                   <AwardImage
                     src={openItem.image}
-                    alt={
-                      openItem.imageAlt ??
-                      `${openItem.title}の写真`
-                    }
+                    alt={openItem.imageAlt ?? `${openItem.title}の写真`}
                     className="h-full w-full"
                     sizes="(max-width: 768px) 100vw, 672px"
                   />
+                </div>
+              )}
+
+              {/* 大会での写真や感想（画像 → テキスト の順に表示） */}
+              {openItem.memories && openItem.memories.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold">大会での様子・感想</h4>
+                  <div className="space-y-6">
+                    {openItem.memories.map((memory, i) => {
+                      const imgs: { src: string; alt?: string }[] =
+                        (memory.images?.length ?? 0) > 0
+                          ? memory.images ?? []
+                          : memory.image
+                            ? [{ src: memory.image, alt: memory.imageAlt }]
+                            : [];
+                      return (
+                        <div key={i} className="space-y-3">
+                          {imgs.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {imgs.map((img, j) => (
+                                <div
+                                  key={j}
+                                  className="relative h-28 w-36 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32"
+                                >
+                                  <AwardImage
+                                    src={img.src}
+                                    alt={img.alt ?? `${openItem.title}の写真`}
+                                    className="h-full w-full"
+                                    sizes="(max-width: 640px) 144px, 128px"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {memory.text?.trim() && (
+                            <p className="text-sm leading-relaxed text-muted-foreground">
+                              {memory.text}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -198,53 +256,7 @@ export function AwardsSection() {
                   </div>
                 );
               })()}
-
-              {/* 大会での写真や感想 */}
-              {openItem.memories && openItem.memories.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="text-sm font-semibold">大会での様子・感想</h4>
-                  <div className="space-y-4">
-                    {openItem.memories.map((memory, i) => {
-                      const imgs: { src: string; alt?: string }[] =
-                        (memory.images?.length ?? 0) > 0
-                          ? memory.images ?? []
-                          : memory.image
-                            ? [{ src: memory.image, alt: memory.imageAlt }]
-                            : [];
-                      return (
-                        <div
-                          key={i}
-                          className="flex flex-col gap-2 sm:flex-row sm:gap-4"
-                        >
-                          {imgs.length > 0 && (
-                            <div className="flex shrink-0 flex-wrap gap-2">
-                              {imgs.map((img, j) => (
-                                <div
-                                  key={j}
-                                  className="relative h-32 w-40 overflow-hidden rounded-lg border bg-muted sm:h-24 sm:w-32"
-                                >
-                                  <AwardImage
-                                    src={img.src}
-                                    alt={
-                                      img.alt ?? `${openItem.title}の写真`
-                                    }
-                                    className="h-full w-full"
-                                    sizes="(max-width: 640px) 160px, 128px"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          <p className="text-sm leading-relaxed text-muted-foreground">
-                            {memory.text}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
