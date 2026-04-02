@@ -43,6 +43,8 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@iconify-json/logos": "^1.2.11",
+    "@iconify-json/simple-icons": "^1.2.75",
     "@slidev/cli": "^52.14.1",
     "@slidev/theme-default": "^0.25.0",
     "@tailwindcss/postcss": "^4",
